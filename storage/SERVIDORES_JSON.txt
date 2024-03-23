@@ -1,0 +1,2 @@
+
+json-server storage/activos.json -b 5001 & json-server storage/asignaciones.json -b 5002 & json-server storage/categoriaActivos.json -b 5003 & json-server storage/estados.json -b 5004 & json-server storage/marca.json -b 5005 & json-server storage/personas.json -b 5006 & json.server storage/tipoMovActivos.json -b 5007 & json-server storage/tipoActivo.json -b 5008 & json-server storage/zonas.json -b 5009

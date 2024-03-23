@@ -1,0 +1,19 @@
+{    
+  "estados": [
+        {
+          "id": "0",
+          "Nombre": "no asignado"
+        },
+        {
+          "id": "1",
+          "Nombre": "asignado"
+        },
+        {
+          "id": "2",
+          "Nombre": "dado de baja por daño"
+        },
+        {
+          "id": "3",
+          "Nombre": "en reparación y/o garantia"
+        }
+      ]}

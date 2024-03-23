@@ -1,0 +1,31 @@
+{
+    "marcas": [
+    {
+      "id": "1",
+      "Nombre": "lg"
+    },
+    {
+      "id": "2",
+      "Nombre": "compumax"
+    },
+    {
+      "id": "3",
+      "Nombre": "logitech"
+    },
+    {
+      "id": "4",
+      "Nombre": "benq"
+    },
+    {
+      "id": "5",
+      "Nombre": "asus"
+    },
+    {
+      "id": "6",
+      "Nombre": "lenovo"
+    },
+    {
+      "id": "7",
+      "Nombre": "hp"
+    }
+  ]}

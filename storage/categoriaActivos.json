@@ -1,0 +1,15 @@
+{
+    "categoriaActivos": [
+    {
+      "id": "1",
+      "Nombre": "equipo de computo"
+    },
+    {
+      "id": "2",
+      "Nombre": "electrodomestico"
+    },
+    {
+      "id": "3",
+      "Nombre": "juego"
+    }
+  ]}

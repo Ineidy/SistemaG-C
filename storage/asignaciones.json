@@ -1,0 +1,11 @@
+{ 
+    "asignaciones": [
+    {
+      "id": "1",
+      "Fecha": "2024-03-21",
+      "tipoAsignacion": "Personal",
+      "asignadoA": 1,
+      "idActivos": 1
+    }
+  ]  
+}

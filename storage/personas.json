@@ -1,0 +1,20 @@
+{
+    "personas": [
+    {
+      "id": "1",
+      "nroId (CC, Nit)":"1003697854",
+      "Nombre": "CAMPUSLAND",
+      "Email": "test@gmail.com",
+      "Telefonos": [
+        {
+            "movil":{
+                "id": "1",
+                "num": "3002014587"
+            },
+            "casa":{
+                "id": "1",
+                "num": "3002014587"
+            }
+        }]
+    }
+]}

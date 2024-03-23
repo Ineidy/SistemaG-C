@@ -1,0 +1,8 @@
+{
+    "zonas":[
+    {
+        "id":1,
+        "nombreZona": "sputnik",
+        "totalCapacidad": 35
+    }
+]}

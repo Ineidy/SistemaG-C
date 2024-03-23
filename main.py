@@ -4,9 +4,8 @@ import modules.getAsignaciones as getasigna
 import modules.getPersonas as getperson
 import modules.getReportes as getreport
 import modules.getTipMovActivos as gettiposmovimientosactivos
-import modules.getZonas as getzonas
 import modules.postZonas as postZonas
-
+import json
 
 
 
@@ -48,6 +47,10 @@ if(__name__=='__main__'):
                 
 """)
         opcion = int(input("Ingrese una opcion: "))
+        if(opcion!=1) and (opcion!=2) and (opcion!=3) and (opcion!=4) and (opcion!=5) and (opcion!=6) and (opcion!=7):
+            print("Opcion no existente!")
+            print("Intente nuevamente :)")
+            (__name__=='__main__')
         if (opcion==1):
             getActivos.menuActivos()
         elif(opcion==2):
@@ -62,3 +65,19 @@ if(__name__=='__main__'):
             gettiposmovimientosactivos.menuMovimientosActivos()
         elif(opcion==7):
             break
+
+
+
+
+
+
+
+# with open("storage/zonas.json", "r") as f:
+#     fichero = f.read()
+#     data = json.loads(fichero)
+#     for i, val in enumerate(data):
+#         data[i]["id"] = (i+1)
+#     data = json.dumps(data, indent=4).encode("utf-8")
+#     with open("storage/zonas.json", "wb+") as f1:
+#         f1.write(data)
+#         f1.close()

@@ -27,7 +27,7 @@ def postZonas():
                 namezona = input("Ingrese el nombre de la zona: ")
                 zonas["nombreZona"] = namezona
             if not zonas.get("totalCapacidad"):
-                totcap = input("Ingrese la capacidad total de la zona: ")
+                totcap = int(input("Ingrese la capacidad total de la zona: "))
                 if(re.match(r"^[0-9]+$", totcap)is not None):
                     zonas["totalCapacidad"] = totcap
                 else: 
@@ -85,7 +85,7 @@ def deleteZonas(id):
 
 
 def getAllZonasId(id):
-    peticion = requests.get(f"http://154.38.171.54:5502/zonas/{id}")
+    peticion = requests.get(f"http:// 154.38.171.54:5502/zonas/{id}")
     return[peticion.json()] if peticion.ok else []
 
 def getAllZonasNombre(nombreZona):

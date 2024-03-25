@@ -23,15 +23,18 @@ def postZonas():
     zonas = {}
     while True: 
         try: 
+            numeroid = str(int(zonas[-1]["id"])+1) if zonas else '1'
+            print ("Nuevo Id de la zona: ", numeroid)
+
+            
             if not zonas.get("nombreZona"):
                 namezona = input("Ingrese el nombre de la zona: ")
                 zonas["nombreZona"] = namezona
             if not zonas.get("totalCapacidad"):
-                totcap = int(input("Ingrese la capacidad total de la zona: "))
-                if(re.match(r"^[0-9]+$", totcap)is not None):
-                    zonas["totalCapacidad"] = totcap
-                else: 
-                    raise Exception ("La capacidad total, no cumple con los estandares")
+                totcap = int(input("Ingrese la capacidad total de la zona (SOLO NUMEROS): "))
+                zonas["totalCapacidad"] = totcap
+             
+
 
         except Exception as error:
             print(error)

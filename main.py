@@ -4,6 +4,7 @@ import modules.getAsignaciones as getasigna
 import modules.getPersonas as getperson
 import modules.getReportes as getreport
 import modules.getTipMovActivos as gettiposmovimientosactivos
+import modules.postActivos as postActivos
 import modules.postZonas as postZonas
 import json
 
@@ -52,7 +53,7 @@ if(__name__=='__main__'):
             print("Intente nuevamente :)")
             (__name__=='__main__')
         if (opcion==1):
-            getActivos.menuActivos()
+            postActivos.menuActivos()
         elif(opcion==2):
             getperson.menuPersonal()
         elif(opcion==3):

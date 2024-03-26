@@ -25,14 +25,13 @@ def postActivos():
             #         raise Exception ("El numero de item no cumple con los estandares requeridos")
                 
             if not activos.get("CodTransaccion"):
-
-                activos["CodTransaccion"]=327
+                activos["CodTransaccion"]=int(327)
             # else:
             #         raise Exception ("El codigo de transaccion no cumple con los estandares requeridos")
             if not activos.get("NroSerial"):
                 numeroserial = input("Ingrese el numero del serial: ")
-                if(re.match(r"^[A-Z0-9-]{5,10}$", numeroserial)is not None):
-                    activos["CodTransaccion"]=numeroserial
+                if(re.match(r"^[A-Z0-9]{5,10}$", numeroserial)is not None):
+                    activos["NroSerial"]=numeroserial
                 else:
                     raise Exception ("El numero del serial no cumple con los estandares requeridos")
             if not activos.get("CodCampus"):
@@ -55,19 +54,19 @@ def postActivos():
             if not activos.get("EmpresaResponsable"):
                 activos["EmpresaResponsable"]=("Campuslands")
             if not activos.get("idMarca"):
-                idmarca=int(input("Ingrese el id de la marca: "))
+                idmarca=input("Ingrese el id de la marca: ")
                 activos["idMarca"] = idmarca
             if not activos.get("idCategoria"):
-                idcategoria = int(input("Ingrese el id de la categoria: "))
+                idcategoria = input("Ingrese el id de la categoria: ")
                 activos["idCategoria"]=idcategoria
             if not activos.get("idTipo"):
-                idtipo=int(input("Ingrese el id del tipo: "))
+                idtipo=input("Ingrese el id del tipo: ")
                 activos["idTipo"]=idtipo
             if not activos.get("ValorUnitario"):
-                valorunitario = int(input("Ingresa el valor unitario del activo: "))
+                valorunitario = input("Ingresa el valor unitario del activo: ")
                 activos["ValorUnitario"]= valorunitario
             if not activos.get("idEstado"):
-                activos["idEstados"]= int(0)
+                activos["idEstados"]= str(0)
             if not activos.get("historialActivos"):
                 activos["historialActivos"] = []
             if not activos.get("asignaciones"):
@@ -131,7 +130,7 @@ def update(id):
                     nombreActivo = input("Ingrese el nuevo nombre del activo: ")
                     activos["Nombre"]=nombreActivo
             if(opcion==7):
-                    idmarca=int(input("Ingrese el nuevo id de la marca: "))
+                    idmarca=input("Ingrese el nuevo id de la marca: ")
                     activos["idMarca"] = idmarca
             if(opcion==8):
                     idcategoria = int(input("Ingrese el id de la categoria: "))
@@ -146,22 +145,22 @@ def update(id):
         except Exception as error:
             print(error)
 
-        activoexistente = getAllDataActivos()
+        activoexistente = getActivosId(id)
         if not activoexistente:
             return {"Mensaje": "Activo no encontrado"}
         
         activoactualizado = {**activoexistente[0], **activos}
-        peticion = requests.put(f'http://154.38.171.54:5502/activos{id}', data=json.dumps(activoactualizado))
+        peticion = requests.put(f'http://154.38.171.54:5502/activos/{id}', data=json.dumps(activoactualizado))
         res = peticion.json()
 
         if peticion.status_code == 200:
             res["Mensaje"] =  "Activo actualizado correctamente"
         else: 
             res["Mensaje"] = "Error al actualizar activos"
-        return[res]
+        return res
 
 def deleteactivos(id):
-     print("""
+    print("""
            
 
                 TIPOS DE ESTADOS DE UN ACTIVO
@@ -175,22 +174,24 @@ def deleteactivos(id):
 
            
 """)
-     activos = {
-          "idEstado": int(input("Ingrese el estado al que desea cambiar el activo: "))
-     }
-     
-     activo_encontrado = getActivosId(id)
-     if not activo_encontrado:
-          return {"Mensaje": "Activo no encontrado"}
-     Activoactualizado = {**activo_encontrado[0], **activos}
-     peticion = requests.put(f"http://154.38.171.54:5502/activos/{id}", data=json.dumps(Activoactualizado))
-     res = peticion.json()
+    activos = {
+        "idEstado": input("Ingrese el estado al que desea cambiar el activo: ")
+    }
+    activo_encontrado = getActivosId(id)
+    if not activo_encontrado:
+        return {"Mensaje": "Activo no encontrado"}
+    Activoactualizado = {**activo_encontrado[0], **activos}
+    peticion = requests.put(f"http://154.38.171.54:5502/activos/{id}", data=json.dumps(Activoactualizado))
+    res = peticion.json()
 
-     if peticion.status_code == 200:
+    if peticion.status_code == 200:
         res["Mensaje"] = "Estado actualizado correctamente!"
-     else: 
-          res["Mensaje"] = "Error en la actualizacion del estado!"
-     return [res]
+    else: 
+        res["Mensaje"] = "Error en la actualizacion del estado!"
+    return [res]
+
+    
+
 
 def menuActivos():
     while True: 
@@ -224,4 +225,4 @@ def menuActivos():
             print(tabulate(update(id), headers="keys", tablefmt='rounded_grid'))
         elif(opcion==3):
             id = input("Ingrese el id del activo al que desea actualizarle el estado: ")
-            print(deleteactivos(id))
+            print(tabulate(deleteactivos(id), headers="keys", tablefmt='rounded_grid'))

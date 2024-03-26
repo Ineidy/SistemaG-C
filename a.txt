@@ -14,3 +14,22 @@ idEstado	"0"
 id	"1"
 historialActivos	[]
 asignaciones	[]
+
+
+
+NroItem	558
+CodTransaccion	"671SAGH"
+CodCampus	"\tCPU832"
+NroFormulario	9723672
+Nombre	"teclao"
+Proveedor	"Compumax Computer"
+EmpresaResponsable	"Campuslands"
+idMarca	"6"
+idCategoria	1
+idTipo	2
+ValorUnitario	100000
+idEstados	0
+historialActivos	[]
+asignaciones	[]
+
+id	"35f9"

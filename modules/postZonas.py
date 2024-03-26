@@ -56,6 +56,7 @@ def updatezonas(id):
             if not zonas.get("totalCapacidad"):
                 totcap = input("Ingrese la nueva capacidad total de la zona: ")
                 if(re.match(r"^[0-9]+$", totcap)is not None):
+                    totcap = int(totcap)
                     zonas["totalCapacidad"] = totcap
                 else: 
                     raise Exception ("La nueva capacidad total, no cumple con los estandares")
@@ -87,6 +88,8 @@ def deleteZonas(id):
 
 
 
+
+
 def getAllZonasId(id):
     peticion = requests.get(f"http:// 154.38.171.54:5502/zonas/{id}")
     return[peticion.json()] if peticion.ok else []
@@ -98,6 +101,10 @@ def getAllZonasNombre(nombreZona):
 def getAllZonasCapacidad(totalCapacidad):
     peticioncap = requests.get(f"http://154.38.171.54:5502/zonas/{totalCapacidad}")
     return[peticioncap.json()] if peticioncap.ok else []
+
+
+
+
 
 def menuzonas():
     while True:
@@ -161,8 +168,8 @@ def menubusquedazonas():
             id = input("Ingrese el id de la zona que desea buscar: ")
             print(tabulate(getAllZonasId(id), headers="keys", tablefmt='rounded_grid'))
         elif(opcion==2):
-            nombreZona = input("Ingrese el nombre de la zona que desea buscar: ")
-            print(tabulate(getAllZonasNombre(nombreZona), headers="keys", tablefmt='rounded_grid'))
+            nombrezona = input("Ingrese el nombre de la zona que desea buscar: ")
+            print(tabulate(getAllZonasNombre(nombrezona), headers="keys", tablefmt='rounded_grid'))
         elif(opcion==3):
             totalCapacidad = input("Ingresa La capacidad total de la zona que deseas buscar: ")
             print(tabulate(getAllZonasCapacidad(totalCapacidad), headers="keys", tablefmt='rounded_grid'))

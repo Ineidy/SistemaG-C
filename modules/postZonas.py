@@ -78,17 +78,12 @@ def updatezonas(id):
             res["Mensaje"] = "Error al actualizar zona"
 
         return[res]
-    
 
 
 def deleteZonas(id):
     peticion = requests.delete(f"http://154.38.171.54:5502/zonas/{id}")
     if peticion.status_code == 200:
         print("Zona Eliminada")
-
-
-
-
 
 
 def menuzonas():
@@ -128,8 +123,6 @@ def menuzonas():
             menubusquedazonas()
 
 
-
-
 def getAllZonasId(id):
     zonasid=[]
     for val in getDataZonas():
@@ -164,11 +157,6 @@ def getAllZonasCapacidad(totalCapacidad):
                     "totalCapacidad": val.get('totalCapacidad')
             })
     return zonascapacidad
-
-
-
-
-
 
 
 def menubusquedazonas():

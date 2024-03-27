@@ -1,12 +1,7 @@
-import re
-
-import modules.getAsignaciones as getasigna
+import modules.postAsignaciones as postasigna
 import modules.postPersonal as postpersonal
-import modules.getReportes as getreport
-import modules.getTipMovActivos as gettiposmovimientosactivos
 import modules.postActivos as postActivos
 import modules.postZonas as postZonas
-import json
 
 
 
@@ -59,11 +54,11 @@ if(__name__=='__main__'):
         elif(opcion==3):
             postZonas.menuzonas()
         elif(opcion==4):
-            getasigna.menuAsignacionActivos()
+            postasigna.menuAsignacionActivos()
         elif(opcion==5):
-            getreport.menuReportes()
+            print("")
         elif(opcion==6):
-            gettiposmovimientosactivos.menuMovimientosActivos()
+            print("")
         elif(opcion==7):
             break
 

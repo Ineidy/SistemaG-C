@@ -9,7 +9,9 @@ def getDataPersonas():
     peticion = requests.get("http://154.38.171.54:5502/personas")
     data = peticion.json()
     return data
-
+def getpersonasId(id):
+    peticion= requests.get(f"http://154.38.171.54:5502/personas/{id}")
+    return[peticion.json()] if peticion.ok else []
 
 def postPersonal():
     identificacion = input("ingrese el id: ")
@@ -45,6 +47,52 @@ def deletePersonas(id):
     if peticion.status_code == 200:
         print("Persona Eliminada")
 
+def menuactualizar(id):
+    while True:
+        print("""
+QUE INFORMACION DESEA EDITAR
+
+1. NROID(CC, NIT)
+2. NOMBRE
+3. EMAIL
+4. NUMERO MOVIL
+5. NUMERO DE CASA 
+
+""")
+
+        personas ={}
+        opcion= int(input("Ingrese la opcion deseada: "))
+        if(opcion==1):
+            nroId = input("ingrese el nuevo numero de identificacion: ")
+            personas["nroId (CC, Nit)"]= nroId
+        if(opcion==2):
+            name = input("Ingrese el nuevo nombre: ")
+            personas["Nombre"] = name
+        if(opcion==3):
+            email = input("ingrese el nuevo numero de email: ")
+            personas["Email"]=email
+        if(opcion==4):
+            nummovil = input("Ingrese el nuevo numero Movil: ")
+            personas["num"] = nummovil
+        if(opcion==5):
+            numcasa = input("Ingrese el nuevo numero de la casa: ")
+            personas["num"] = numcasa
+
+
+        activoexistente = getDataPersonas()
+        if not activoexistente:
+            return {"Mensaje": "Activo no encontrado"}
+        
+        personaactualizado = {**activoexistente[0], **personas}
+        peticion = requests.put(f'http://154.38.171.54:5502/personas/{id}', data=json.dumps(personaactualizado))
+        res = peticion.json()
+
+        if peticion.status_code == 200:
+            res["Mensaje"] =  "Persona actualizada correctamente"
+        else: 
+            res["Mensaje"] = "Error al actualizar persona"
+        return res
+    
 
 
 def menuPersonal():
@@ -74,10 +122,13 @@ def menuPersonal():
         elif(opcion==1):
             print(tabulate(postPersonal(), headers="keys", tablefmt='rounded_grid'))
         elif(opcion==3):
-            id = input("Ingresa el id de la persona que quiere eliminar")
+            id = input("Ingresa el id de la persona que quiere elimina: r")
             print(tabulate(deletePersonas(id), headers="keys", tablefmt='rounded_grid'))
         elif(opcion==4): 
             print(menuBusqueda())
+        elif(opcion==2):
+            id = input("Ingrese el id de la persona que desea actualizar: ")
+            print(menuactualizar(id))
 
 
 def getBuscarPersona(id):

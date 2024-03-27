@@ -18,22 +18,22 @@ def getPostZonasId(codigo):
     return data
 
 
-
 def postZonas():
     zonas = {}
     while True: 
         try: 
-            numeroid = str(int(zonas[-1]["id"])+1) if zonas else '1'
-            print ("Nuevo Id de la zona: ", numeroid)
 
-            
             if not zonas.get("nombreZona"):
                 namezona = input("Ingrese el nombre de la zona: ")
                 zonas["nombreZona"] = namezona
             if not zonas.get("totalCapacidad"):
-                totcap = int(input("Ingrese la capacidad total de la zona (SOLO NUMEROS): "))
-                zonas["totalCapacidad"] = totcap
-             
+
+                totcap = input("Ingrese la capacidad total de la zona: ")
+                if(re.match(r'[0-9]+$', totcap) is not None):
+                    totcap=int(totcap)
+                    zonas["totalCapacidad"] = totcap
+                else:
+                    raise Exception ("La capacidad total no cumple con los estandares establecidos")
 
 
         except Exception as error:
@@ -90,21 +90,6 @@ def deleteZonas(id):
 
 
 
-def getAllZonasId(id):
-    peticion = requests.get(f"http:// 154.38.171.54:5502/zonas/{id}")
-    return[peticion.json()] if peticion.ok else []
-
-def getAllZonasNombre(nombreZona):
-    peticionnom = requests.get(f"http://154.38.171.54:5502/zonas/{nombreZona}")
-    return[peticionnom.json()] if peticionnom.ok else []
-
-def getAllZonasCapacidad(totalCapacidad):
-    peticioncap = requests.get(f"http://154.38.171.54:5502/zonas/{totalCapacidad}")
-    return[peticioncap.json()] if peticioncap.ok else []
-
-
-
-
 
 def menuzonas():
     while True:
@@ -123,7 +108,7 @@ def menuzonas():
         5. REGRESAR AL MENU PRINCIPAL
 
 """)
-        opcion = int(input("Ingrese una opcion: ")) 
+        opcion = int(input("Ingrese una opcion: "))
         if(opcion!=1) and (opcion!=2) and (opcion!=3) and (opcion!=4) and (opcion!=5):
             print("Opcion no existente!")
             print("Intenta nuevamente :)")
@@ -141,6 +126,48 @@ def menuzonas():
             print(tabulate(updatezonas(id), headers="keys", tablefmt='rounded_grid'))
         elif(opcion==4):
             menubusquedazonas()
+
+
+
+
+def getAllZonasId(id):
+    zonasid=[]
+    for val in getDataZonas():
+        if(val.get('id') == id):
+            zonasid.append({
+                    "id": val.get('id'),
+                    "nombreZona": val.get('nombreZona'),
+                    "totalCapacidad": val.get('totalCapacidad')
+            })
+    return zonasid
+
+
+def getAllZonasNombre(nombreZona):
+    zonasnombre=[]
+    for val in getDataZonas():
+        if(val.get('nombreZona') == nombreZona):
+            zonasnombre.append({
+                    "id": val.get('id'),
+                    "nombreZona": val.get('nombreZona'),
+                    "totalCapacidad": val.get('totalCapacidad')
+            })
+    return zonasnombre
+
+
+def getAllZonasCapacidad(totalCapacidad):
+    zonascapacidad=[]
+    for val in getDataZonas():
+        if(val.get('totalCapacidad') == totalCapacidad):
+            zonascapacidad.append({
+                    "id": val.get('id'),
+                    "nombreZona": val.get('nombreZona'),
+                    "totalCapacidad": val.get('totalCapacidad')
+            })
+    return zonascapacidad
+
+
+
+
 
 
 
@@ -168,10 +195,10 @@ def menubusquedazonas():
             id = input("Ingrese el id de la zona que desea buscar: ")
             print(tabulate(getAllZonasId(id), headers="keys", tablefmt='rounded_grid'))
         elif(opcion==2):
-            nombrezona = input("Ingrese el nombre de la zona que desea buscar: ")
-            print(tabulate(getAllZonasNombre(nombrezona), headers="keys", tablefmt='rounded_grid'))
+            nombreZona = input("Ingrese el nombre de la zona que desea buscar: ")
+            print(tabulate(getAllZonasNombre(nombreZona), headers="keys", tablefmt='rounded_grid'))
         elif(opcion==3):
-            totalCapacidad = input("Ingresa La capacidad total de la zona que deseas buscar: ")
+            totalCapacidad = int(input("Ingresa La capacidad total de la zona que deseas buscar: "))
             print(tabulate(getAllZonasCapacidad(totalCapacidad), headers="keys", tablefmt='rounded_grid'))
         elif(opcion==4):
             break

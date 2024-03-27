@@ -1,7 +1,7 @@
 import re
-import modules.getActivos as getActivos
+
 import modules.getAsignaciones as getasigna
-import modules.getPersonas as getperson
+import modules.postPersonal as postpersonal
 import modules.getReportes as getreport
 import modules.getTipMovActivos as gettiposmovimientosactivos
 import modules.postActivos as postActivos
@@ -55,7 +55,7 @@ if(__name__=='__main__'):
         if (opcion==1):
             postActivos.menuActivos()
         elif(opcion==2):
-            getperson.menuPersonal()
+            postpersonal.menuPersonal()
         elif(opcion==3):
             postZonas.menuzonas()
         elif(opcion==4):

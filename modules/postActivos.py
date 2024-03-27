@@ -19,10 +19,12 @@ def postActivos():
         try:
 
             if not activos.get("NroItem"):
-                nmeroitem = int(input("Ingrese el numero de item: "))
+                nmeroitem = input("Ingrese el numero de item: ")
+                if(re.match(r'[0-9]+$', nmeroitem) is not None):
+                    nmeroitem = int(nmeroitem)
                 activos["NroItem"] = nmeroitem
-            # else:
-            #         raise Exception ("El numero de item no cumple con los estandares requeridos")
+            else:
+                    raise Exception ("El numero de item no cumple con los estandares requeridos")
                 
             if not activos.get("CodTransaccion"):
                 activos["CodTransaccion"]=int(327)
@@ -41,8 +43,9 @@ def postActivos():
                 else:
                     raise Exception ("El codigo de campus no cumple con los estandares requeridos")
             if not activos.get("NroFormulario"):
-                numerofor = int(input("Ingrese el numero de formulario: "))
-
+                numerofor = input("Ingrese el numero de formulario: ")
+                if(re.match(r'[0-9]+$', numerofor) is not None):
+                    numerofor= int(numerofor)
                 activos["NroFormulario"]=numerofor
                 # else:
                 #     raise Exception ("El numero de formulario no cumple con los estandares requeridos")
@@ -55,16 +58,29 @@ def postActivos():
                 activos["EmpresaResponsable"]=("Campuslands")
             if not activos.get("idMarca"):
                 idmarca=input("Ingrese el id de la marca: ")
-                activos["idMarca"] = idmarca
+                if(re.match(r'[0-9]+$', idmarca) is not None):
+                    activos["idMarca"] = idmarca
+                else:
+                    raise Exception ("El id de la marca no cumple con los estandares requeridos")
+                
             if not activos.get("idCategoria"):
                 idcategoria = input("Ingrese el id de la categoria: ")
-                activos["idCategoria"]=idcategoria
+                if(re.match(r'[0-9]+$', idmarca) is not None):
+                    activos["idCategoria"]=idcategoria
+                else:
+                    raise Exception ("El id de la categoria no cumple con los estandares requeridos")
             if not activos.get("idTipo"):
                 idtipo=input("Ingrese el id del tipo: ")
-                activos["idTipo"]=idtipo
+                if(re.match(r'[0-9]+$', idtipo) is not None):
+                    activos["idTipo"]=idtipo
+                else:
+                    raise Exception ("El id del tipo no cumple con los estandares requeridos")
             if not activos.get("ValorUnitario"):
                 valorunitario = input("Ingresa el valor unitario del activo: ")
-                activos["ValorUnitario"]= valorunitario
+                if(re.match(r'[0-9]+$', valorunitario) is not None):
+                    activos["ValorUnitario"]= valorunitario
+                else:
+                    raise Exception ("El valor unitario no cumple con los estandares requeridos")
             if not activos.get("idEstado"):
                 activos["idEstados"]= str(0)
             if not activos.get("historialActivos"):
@@ -85,9 +101,9 @@ def update(id):
     while True:
         try:
             print("""
-          
+        
             QUE INFORMACION DESEA EDITAR
-          
+        
             1. NroItem
             2. CodTransaccion
             3. NroSerial
@@ -103,6 +119,10 @@ def update(id):
 """)
             
             opcion = int(input("Ingrese la opcion deseada: "))
+            if(opcion!=1) and (opcion!=2) and (opcion!=3) and (opcion!=4) and (opcion!=5) and (opcion!=6) and (opcion!=7) and (opcion!=8) and (opcion!=9) and (opcion!=10):
+                print("Opcion no existente!")
+                print("Intente nuevamente :)")
+                update(id)
             if(opcion==1):
                 nmeroitem = int(input("Ingrese el nuevo numero de item: "))
                 activos["NroItem"] = nmeroitem
@@ -160,27 +180,11 @@ def update(id):
         return res
 
 def deleteactivos(id):
-    print("""
-           
 
-                TIPOS DE ESTADOS DE UN ACTIVO
-           
-
-                        
-                0. No asignado
-                1. Asignado 
-                2. Dado de baja por daño 
-                3. En reparación y/o garantia
-
-           
-""")
-    activos = {
-        "idEstado": input("Ingrese el estado al que desea cambiar el activo: ")
-    }
     activo_encontrado = getActivosId(id)
     if not activo_encontrado:
         return {"Mensaje": "Activo no encontrado"}
-    Activoactualizado = {**activo_encontrado[0], **activos}
+    Activoactualizado = {**activo_encontrado[0], "idEstado": "2"}
     peticion = requests.put(f"http://154.38.171.54:5502/activos/{id}", data=json.dumps(Activoactualizado))
     res = peticion.json()
 
@@ -196,19 +200,19 @@ def deleteactivos(id):
 def menuActivos():
     while True: 
         print("""
-              
+            
 
 
 
         MENU ACTIVOS
-              
+            
 
         1. AGREGAR
         2. EDITAR
         3. ELIMINAR
         4. BUSCAR
         5. REGRESAR AL MENU PRINCIPAL
-              
+            
 
 """)
         opcion = int(input("Ingrese una opcion: "))
@@ -224,5 +228,196 @@ def menuActivos():
             id = input("Ingrese el id de el activo que desea actualizar: ")
             print(tabulate(update(id), headers="keys", tablefmt='rounded_grid'))
         elif(opcion==3):
-            id = input("Ingrese el id del activo al que desea actualizarle el estado: ")
+            id = input("Ingrese el id del activo al que desea eliminar el estado: ")
             print(tabulate(deleteactivos(id), headers="keys", tablefmt='rounded_grid'))
+        elif(opcion==4):
+            print(tabulate(menubuscar(), headers="keys", tablefmt='rounded_grid'))
+
+
+
+
+def getAllArticulos0():
+    articulo =[]
+    for val in getAllDataActivos():
+        if (val.get("idEstado") == "0"):
+            articulo.append(
+                {
+                        "NroItem": val.get('NroItem'),
+                        "NroFormulario": val.get('NroFormulario'),
+                        "Nombre": val.get('Nombre'),
+                        "idEstado": val.get('idEstado')
+                }
+            )
+    return articulo
+
+
+def getAllArticulos1():
+    articulo1 =[]
+    for val in getAllDataActivos():
+        if (val.get("idEstado") == "1"):
+            articulo1.append(
+                {
+                        "NroItem": val.get('NroItem'),
+                        "NroFormulario": val.get('NroFormulario'),
+                        "Nombre": val.get('Nombre'),
+                        "idEstado": val.get('idEstado')
+                }
+            )
+    return articulo1
+
+def getAllArticulos3():
+    articulo3 =[]
+    for val in getAllDataActivos():
+        if (val.get("idEstado") == "3"):
+            articulo3.append(
+                {
+                        "NroItem": val.get('NroItem'),
+                        "NroFormulario": val.get('NroFormulario'),
+                        "Nombre": val.get('Nombre'),
+                        "idEstado": val.get('idEstado')
+                }
+            )
+    return articulo3
+
+
+def getAllArticulos2():
+    articulo2 =[]
+    for val in getAllDataActivos():
+        if (val.get('idEstado') == "2"):
+            articulo2.append(
+                {
+                        "NroItem": val.get('NroItem'),
+                        "NroFormulario": val.get('NroFormulario'),
+                        "Nombre": val.get('Nombre'),
+                        "idEstado": val.get('idEstado')
+                }
+            )
+    return articulo2
+
+def getAllActivosItem(item):
+    activosItem = []
+    for val in getAllDataActivos():
+        if(val.get('NroItem') == item):
+            activosItem.append({
+                    "NroItem": val.get('NroItem'),
+                    "NroFormulario": val.get('NroFormulario'),
+                    "Nombre": val.get('Nombre'),
+                    "idEstado": val.get('idEstado')
+            })
+    return activosItem
+
+def getAllActivosValorU(valorU):
+    activosvalor=[]
+    for val in getAllDataActivos():
+        if(val.get('ValorUnitario') == valorU):
+            activosvalor.append({
+                    "NroItem": val.get('NroItem'),
+                    "NroFormulario": val.get('NroFormulario'),
+                    "Nombre": val.get('Nombre'),
+                    "idEstado": val.get('idEstado'),
+                    "valorUnitario": val.get('ValorUnitario')
+            })
+    return activosvalor
+
+def getAllActivosIdCategoria(idcate):
+    activosidcate=[]
+    for val in getAllDataActivos():
+        if(val.get('idCategoria') == idcate):
+            activosidcate.append({
+                    "NroItem": val.get('NroItem'),
+                    "NroFormulario": val.get('NroFormulario'),
+                    "Nombre": val.get('Nombre'),
+                    "idEstado": val.get('idEstado'),
+                    "valorUnitario": val.get('ValorUnitario'),
+                    "idCategoria": val.get('idCategoria')
+            })
+    return activosidcate
+
+
+def getAllActivosIdTipo(idtipo):
+    activosidtipo=[]
+    for val in getAllDataActivos():
+        if(val.get('idTipo') == idtipo):
+            activosidtipo.append({
+                    "NroItem": val.get('NroItem'),
+                    "NroFormulario": val.get('NroFormulario'),
+                    "Nombre": val.get('Nombre'),
+                    "idEstado": val.get('idEstado'),
+                    "valorUnitario": val.get('ValorUnitario'),
+                    "idTipo": val.get('idTipo')
+            })
+    return activosidtipo
+
+def getAllActivosIdMarca(idmarca):
+    activosidmarca=[]
+    for val in getAllDataActivos():
+        if(val.get('idTipo') == idmarca):
+            activosidmarca.append({
+                    "NroItem": val.get('NroItem'),
+                    "NroFormulario": val.get('NroFormulario'),
+                    "Nombre": val.get('Nombre'),
+                    "idEstado": val.get('idEstado'),
+                    "valorUnitario": val.get('ValorUnitario'),
+                    "idMarca": val.get('idMarca')
+            })
+    return activosidmarca
+
+
+
+
+def menubuscar():
+    while True:
+        print("""
+
+
+                        MENU DE BUSQUEDAS DE ACTIVOS
+                                        
+                        1. BUSCAR ACTIVOS NO ASIGNADOS
+                        2. BUSCAR ACTIVOS ASIGNADOS
+                        3. BUSCAR ACTIVOS DADOS DE BAJA POR DAÑO
+                        4. BUSCAR ACTIVOS EN REPARACION Y/O GARANTIA
+                        5. BUSCAR ACTIVOS POR EL ID 
+                        6. BUSCAR ACTIVOS POR EL NUMERO DE ITEM
+                        7. BUSCRA ACTIVO POR EL VALOR UNITARIO
+                        8. BUSCAR ACTIVO POR ID DE CATEGORIA
+                        9. BUSCAR ACTIVO POR ID DE TIPO
+                        10. BUSCAR ACTIVO POR ID DE LA MARCA
+                        0. SALIR
+                                        
+
+""")
+        
+        opcion = int(input("Ingrese la opcion que desea filtrar: "))
+        if(opcion!=1) and (opcion!=2) and (opcion!=3) and (opcion!=4)and (opcion!=5)and (opcion!=6)and (opcion!=7)and (opcion!=8)and (opcion!=9)and (opcion!=10)and (opcion!=0):
+            print("Opcion no existente!")
+            print("Intenta nuevamente :)")
+            menubuscar()
+
+        if(opcion==0):
+            break
+        elif(opcion==1):
+            print(tabulate(getAllArticulos0(),headers="keys", tablefmt='rounded_grid'))
+        elif(opcion==2):
+            print(tabulate(getAllArticulos1(),headers="keys", tablefmt='rounded_grid'))
+        elif(opcion==3):
+            print(tabulate(getAllArticulos2(),headers="keys", tablefmt='rounded_grid'))
+        elif(opcion==4):
+            print(tabulate(getAllArticulos3(),headers="keys", tablefmt='rounded_grid'))
+        elif(opcion==5):
+            id = input("Ingrese el id del activo que desea filtrar: ")
+            print(tabulate(getActivosId(id),headers="keys", tablefmt='rounded_grid'))
+        elif(opcion==6):
+            item = int(input("Ingrese el numero del item que desea filtrar: "))
+            print(tabulate(getAllActivosItem(item),headers="keys", tablefmt='rounded_grid'))
+        elif(opcion==7):
+            valorU = input("Ingrese el valor unitario que desea filtrar: ")
+            print(tabulate(getAllActivosValorU(valorU),headers="keys", tablefmt='rounded_grid'))
+        elif(opcion==8):
+            idcate = input("Ingrese el id de la categoria que desea filtrar: ")
+            print(tabulate(getAllActivosIdCategoria(idcate),headers="keys", tablefmt='rounded_grid'))
+        elif(opcion==9):
+            idtipo = input("Ingrese el id del tipo que desea filtrar: ")
+            print(tabulate(getAllActivosIdTipo(idtipo),headers="keys", tablefmt='rounded_grid'))
+        elif(opcion==10):
+            idmarca = input("Ingrese el id de la marca que desea filtrar: ")
+            print(tabulate(getAllActivosIdMarca(idmarca),headers="keys", tablefmt='rounded_grid'))

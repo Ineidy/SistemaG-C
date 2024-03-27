@@ -1,35 +1,16 @@
-NroItem	51
-CodTransaccion	327
-NroSerial	"400SN39173"
-CodCampus	"CPU001"
-NroFormulario	966217823
-Nombre	"CPU - Bodg50-9051-900-0017 GMR ESC   "
-Proveedor	"Compumax Computer "
-EmpresaResponsable	"Campuslands"
-idMarca	"2"
-idCategoria	"1"
-idTipo	"2"
-ValorUnitario	"10000"
-idEstado	"0"
-id	"1"
-historialActivos	[]
-asignaciones	[]
+ 
 
 
-
-NroItem	558
-CodTransaccion	"671SAGH"
-CodCampus	"\tCPU832"
-NroFormulario	9723672
-Nombre	"teclao"
-Proveedor	"Compumax Computer"
-EmpresaResponsable	"Campuslands"
-idMarca	"6"
-idCategoria	1
-idTipo	2
-ValorUnitario	100000
-idEstados	0
-historialActivos	[]
-asignaciones	[]
-
-id	"35f9"
+id	"2"
+nroId (CC, Nit)	"1003697855"
+Nombre	"Orbin Pabon"
+Email	"orbinpabon@example.com"
+Telefonos	
+0	
+movil	
+id	"2"
+num	"3002014590"
+casa	
+id	"2"
+num	"3002014591"
+2	

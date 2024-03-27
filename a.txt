@@ -14,3 +14,10 @@ casa
 id	"2"
 num	"3002014591"
 2	
+
+
+
+id	"2"
+nroId (CC, Nit)	"1003697855"
+Nombre	"Orbin Pabon"
+Email

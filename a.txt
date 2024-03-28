@@ -2,3 +2,22 @@ NroAsignacion	1
 FechaAsignación	"2024-05-14"
 TipoAsignacion	"Persona"
 AsignadoA	"2"
+
+
+
+NroItem	60
+CodTransaccion	327
+NroSerial	"COM2024CM21070018"
+CodCampus	"MON003"
+NroFormulario	966217832
+Nombre	"Monitor - Bodg50-9051-900-0017 GMR ESC   "
+Proveedor	"Compumax Computer "
+EmpresaResponsable	"Campuslands"
+idMarca	"2"
+idCategoria	"1"
+idTipo	"1"
+ValorUnitario	"10000"
+idEstado	"0"
+id	"10"
+historialActivos	[]
+asignaciones	

@@ -2,6 +2,7 @@ import modules.postAsignaciones as postasigna
 import modules.postPersonal as postpersonal
 import modules.postActivos as postActivos
 import modules.postZonas as postZonas
+import modules.postReportes as postreportes
 
 
 
@@ -56,7 +57,7 @@ if(__name__=='__main__'):
         elif(opcion==4):
             postasigna.menuAsignacionActivos()
         elif(opcion==5):
-            print("")
+            postreportes.MenuRepores()
         elif(opcion==6):
             print("")
         elif(opcion==7):

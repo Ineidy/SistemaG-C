@@ -233,7 +233,23 @@ def menuActivos():
         elif(opcion==4):
             print(tabulate(menubuscar(), headers="keys", tablefmt='rounded_grid'))
 
-
+def getAllActivos():
+    activos = []
+    for val in getAllDataActivos():
+        activos.append({
+                        "id": val.get('id'),
+                        "NroItem": val.get('NroItem'),
+                        "NroSerial": val.get('NroSerial'),
+                        "CodCampus": val.get('CodCampus'),
+                        "NroFormulario": val.get('NroFormulario'),
+                        "Nombre": val.get('Nombre'),
+                        "idMarca": val.get('idMarca'),
+                        "idCategoria": val.get('idCategoria'),
+                        "idTipo": val.get('idTipo'),
+                        "ValorUnitario": val.get('ValorUnitario'),
+                        "idEstado": val.get('idEstado')
+        })
+    return activos
 
 
 def getAllArticulos0():

@@ -1,4 +1,5 @@
 import requests
+from tabulate import tabulate
 import json
 import modules.postPersonal as Personal
 import modules.postActivos as activos 
@@ -33,11 +34,23 @@ def MenuTipoAsigna():
             break
         elif(opcion==1):
             postAsignacionesPersona()
+        elif(opcion==2):
+            postAsignacionesZonas()
+
 
 
 def postAsignacionesPersona(idactivo):
+    global asignaciones
+    if not 'asignaciones' in globals():
+        asignaciones = []
+    if asignaciones:
+        ultNumAsig = asignaciones[-1]["NroAsignacion"]
+    else:
+        ultNumAsig = 0
+
+    numNewAsig = ultNumAsig + 1
     nuevainfo ={
-        "NroAsignacion": +1,
+        "NroAsignacion": numNewAsig,
         "FechaAsignación": input("Ingrese la fecha EN EL SIGUIENTE FORMATO:  YYYY-MM-DD: "),
         "TipoAsignacion": "Persona",
         "AsignadoA": input("Ingrese el id de la persona a la que le asignara el activo: ")
@@ -111,14 +124,27 @@ def menuAsignacionActivos():
             break
         elif(opcion==1):
             menupersonasOzonas()
-             
+        elif(opcion==2):
+            id = input("Ingresa el id de del activo del que desea buscar asignaciones")
+            print(tabulate(getAllAsignaId(id), headers="keys", tablefmt='rounded_grid'))             
 
-
-
-
-def buscarAsignaciones(Activo, nroasig):
-    
-
+def getAllAsignaId(id):
+    asignacionid = []
+    for val in activos.getActivosId(id):
+        asignaciones = val.get('asignaciones', [])
+        for asignacion in asignaciones:
+            asignacionid.append({
+                    "NroItem": val.get('NroItem'),
+                    "NroFormulario": val.get('NroFormulario'),
+                    "Nombre": val.get('Nombre'),
+                    "idEstado": val.get('idEstado'),
+                    "NroAsignacion": asignacion.get('NroAsignacion'),
+                    "FechaAsignación":  asignacion.get('FechaAsignación'),
+                    "TipoAsignacion": asignacion.get('TipoAsignacion'),
+                    "AsignadoA": asignacion.get('AsignadoA')
+                    
+            })
+    return asignacionid
 
 
 

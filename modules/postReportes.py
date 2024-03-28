@@ -1,11 +1,32 @@
 from tabulate import tabulate
-import modules. postActivos as activos
+import modules.postActivos as activos
 
 
 
 
 
 
+def ActivosCategoria():
+    while True:
+        print("""
+              
+                                        
+                            CATEGORIAS
+                                        
+                            1. EQUIPO DE COMPUTO
+                            2. ELECTRODOMESTICO
+                            3. JUEGO
+                            0. SALIR
+                                        
+
+
+""")
+        opcion = int(input("Ingrese la opcion que desea flitrar: "))
+        if(opcion==0):
+            break
+        elif(opcion==1):
+            print(tabulate(activos.getAllActivosIdCategoria1(), headers="keys", tablefmt='rounded_grid'))
+        
 
 
 
@@ -30,3 +51,5 @@ def MenuRepores():
             break
         elif(opcion==1):
             print(tabulate(activos.getAllActivos(), headers="keys", tablefmt='rounded_grid'))
+        elif(opcion==2):
+            ActivosCategoria()

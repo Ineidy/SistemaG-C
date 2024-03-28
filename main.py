@@ -62,6 +62,3 @@ if(__name__=='__main__'):
             print("")
         elif(opcion==7):
             break
-
-
-

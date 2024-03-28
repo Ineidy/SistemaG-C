@@ -4,11 +4,17 @@ import re
 import json
 from tabulate import tabulate
 
-# json-server storage/personas.json -b 5006
+
+
+
+
+
+
 def getDataPersonas():
     peticion = requests.get("http://154.38.171.54:5502/personas")
     data = peticion.json()
     return data
+
 def getpersonasId(id):
     peticion= requests.get(f"http://154.38.171.54:5502/personas/{id}")
     return[peticion.json()] if peticion.ok else []

@@ -1,23 +1,4 @@
- 
-
-
-id	"2"
-nroId (CC, Nit)	"1003697855"
-Nombre	"Orbin Pabon"
-Email	"orbinpabon@example.com"
-Telefonos	
-0	
-movil	
-id	"2"
-num	"3002014590"
-casa	
-id	"2"
-num	"3002014591"
-2	
-
-
-
-id	"2"
-nroId (CC, Nit)	"1003697855"
-Nombre	"Orbin Pabon"
-Email
+NroAsignacion	1
+FechaAsignación	"2024-05-14"
+TipoAsignacion	"Persona"
+AsignadoA	"2"

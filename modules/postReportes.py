@@ -26,6 +26,9 @@ def ActivosCategoria():
             break
         elif(opcion==1):
             print(tabulate(activos.getAllActivosIdCategoria1(), headers="keys", tablefmt='rounded_grid'))
+        elif(opcion==2):
+            print(tabulate(activos.getAllActivosIdCategoria2(), headers="keys", tablefmt='rounded_grid'))
+            
         
 
 

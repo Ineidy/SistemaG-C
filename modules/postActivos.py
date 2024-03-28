@@ -285,6 +285,27 @@ def getAllActivosIdCategoria1():
             })
     return activos
 
+
+
+def getAllActivosIdCategoria2():
+    activos = []
+    for val in getAllDataActivos():
+        if (val.get("idCategoria")=="2"):
+            activos.append({
+                        "id": val.get('id'),
+                        "NroItem": val.get('NroItem'),
+                        "NroSerial": val.get('NroSerial'),
+                        "CodCampus": val.get('CodCampus'),
+                        "NroFormulario": val.get('NroFormulario'),
+                        "Nombre": val.get('Nombre'),
+                        "idMarca": val.get('idMarca'),
+                        "idCategoria": val.get('idCategoria'),
+                        "idTipo": val.get('idTipo'),
+                        "ValorUnitario": val.get('ValorUnitario'),
+                        "idEstado": val.get('idEstado')
+            })
+    return activos
+
 def getAllArticulos1():
     articulo1 =[]
     for val in getAllDataActivos():

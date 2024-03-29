@@ -23,7 +23,7 @@ def ActivosCategoria():
 
 """)
         opcion = int(input("Ingrese la opcion que desea flitrar: "))
-        if(opcion!=1) and (opcion!=2) and (opcion!=3) and (opcion!=0):
+        if opcion not in [1,2,3,0]:
             print("Opcion no existente!")
             print("Intente nuevamente :)")
         if(opcion==0):
@@ -56,7 +56,7 @@ def MenuRepores():
 """)
         
         opcion = int(input("Ingrese la opcion deseada: "))
-        if(opcion!=1) and (opcion!=2) and (opcion!=3) and (opcion!=4) and (opcion!=5) and (opcion!=6):
+        if opcion not in [1,2,3,4,5,6]:
             print("Opcion no existente!")
             print("Intente nuevamente :)")
         if opcion==6:

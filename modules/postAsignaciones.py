@@ -30,7 +30,7 @@ def MenuTipoAsigna():
 
 """)
         opcion = int(input("Ingrese la opcion deseada: "))
-        if(opcion!=1) and (opcion!=2) and (opcion!=0):
+        if opcion not in [1,2,0]:
             print("Opcion no existente!")
             print("Intente nuevamente :)")
         if(opcion==0):
@@ -43,17 +43,9 @@ def MenuTipoAsigna():
 
 
 def postAsignacionesPersona(idactivo):
-    global asignaciones
-    if not 'asignaciones' in globals():
-        asignaciones = []
-    if asignaciones:
-        ultNumAsig = asignaciones[-1]["NroAsignacion"]
-    else:
-        ultNumAsig = 0
 
-    numNewAsig = ultNumAsig + 1
     nuevainfo ={
-        "NroAsignacion": numNewAsig,
+        "NroAsignacion": +1,
         "FechaAsignación": input("Ingrese la fecha EN EL SIGUIENTE FORMATO:  YYYY-MM-DD: "),
         "TipoAsignacion": "Persona",
         "AsignadoA": input("Ingrese el id de la persona a la que le asignara el activo: ")
@@ -61,6 +53,10 @@ def postAsignacionesPersona(idactivo):
     }
     activo = obtenerAsignaId(idactivo)
     if activo:
+        if activo.get("idEstado") == "2":
+            print("EL ACTIVO ESTA DE BAJA, NO PUEDE SER ASIGNADO")
+            return False
+
         asignaciones = activo.get("asignaciones", [])
         asignaciones.append(nuevainfo)
         activo["asignaciones"] = asignaciones
@@ -89,6 +85,10 @@ def postAsignacionesZonas(idactivo):
     }
     activo = obtenerAsignaId(idactivo)
     if activo:
+        if activo.get("idEstado") == "2":
+            print("EL ACTIVO ESTA DADO DE BAJA, NO PUEDE SER ASIGNADO")
+            return False
+
         asignaciones = activo.get("asignaciones", [])
         asignaciones.append(nuevainfo)
         activo["asignaciones"] = asignaciones
@@ -122,7 +122,7 @@ def menuAsignacionActivos():
 
 """)
         opcion = int(input("Ingrese una opcion: "))
-        if(opcion!=1) and (opcion!=2) and (opcion!=3):
+        if opcion not in [1,2,3]:
             print("Opcion no existente!")
             print("Intente nuevamente :)")
         if(opcion==3):
@@ -164,7 +164,7 @@ def menupersonasOzonas():
 
 """)
         opcion=int(input("Ingrese la opcion que desea: "))
-        if(opcion!=1) and (opcion!=2) and (opcion!=0):
+        if opcion not in [1,2,0]:
             print("Opcion no existente!")
             print("Intente nuevamente :)")
         if(opcion==1):

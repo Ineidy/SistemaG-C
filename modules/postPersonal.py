@@ -63,8 +63,8 @@ def menuactualizar(id):
                         1. NROID(CC, NIT)
                         2. NOMBRE
                         3. EMAIL
-                        4. NUMERO MOVIL
-                        5. NUMERO DE CASA 
+                        # 4. NUMERO MOVIL
+                        # 5. NUMERO DE CASA 
                                     
 
 
@@ -73,7 +73,7 @@ def menuactualizar(id):
 
         personas ={}
         opcion= int(input("Ingrese la opcion deseada: "))
-        if(opcion!=1) and (opcion!=2) and (opcion!=3) and (opcion!=4) and (opcion!=5):
+        if opcion not in [1,2,3,5,4]:
             print("Opcion no existente!")
             print("Intente nuevamente :)")
         if(opcion==1):
@@ -85,17 +85,17 @@ def menuactualizar(id):
         if(opcion==3):
             email = input("ingrese el nuevo numero de email: ")
             personas["Email"]=email
-        if(opcion==4):
-            nummovil = input("Ingrese el nuevo numero Movil: ")
-            personas["num"] = nummovil
-        if(opcion==5):
-            numcasa = input("Ingrese el nuevo numero de la casa: ")
-            personas["num"] = numcasa
+        # if(opcion==4):
+        #     nummovil = input("Ingrese el nuevo numero Movil: ")
+        #     personas["num"] = nummovil
+        # if(opcion==5):
+        #     numcasa = input("Ingrese el nuevo numero de la casa: ")
+        #     personas["num"] = numcasa
 
 
-        activoexistente = getDataPersonas()
+        activoexistente = getpersonasId(id)
         if not activoexistente:
-            return {"Mensaje": "Activo no encontrado"}
+            return {"Mensaje": "Persona no encontrada"}
         
         personaactualizado = {**activoexistente[0], **personas}
         peticion = requests.put(f'http://154.38.171.54:5502/personas/{id}', data=json.dumps(personaactualizado))
@@ -128,7 +128,7 @@ def menuPersonal():
 
 """)
         opcion = int(input("Ingrese una opcion: "))
-        if(opcion!=1) and (opcion!=2) and (opcion!=3) and (opcion!=4) and (opcion!=5):
+        if opcion not in [1,2,3,4,5]:
             print("Opcion no existente!")
             print("Intenta nuevamente :)")
         elif(opcion==5):
@@ -215,7 +215,7 @@ def menuBusqueda():
 
 """)
         opcion = int(input("Ingrese la opcion que desea filtrar: "))
-        if(opcion!=1) and (opcion!=2) and (opcion!=3) and (opcion!=4) and (opcion!=0):
+        if opcion not in [1,2,3,4,0]:
             print("Intenta nuevamente :)")
             menuBusqueda()
         elif(opcion==0):

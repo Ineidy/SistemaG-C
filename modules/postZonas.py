@@ -104,7 +104,7 @@ def menuzonas():
 
 """)
         opcion = int(input("Ingrese una opcion: "))
-        if(opcion!=1) and (opcion!=2) and (opcion!=3) and (opcion!=4) and (opcion!=5):
+        if opcion not in [1,2,3,4,5]:
             print("Opcion no existente!")
             print("Intenta nuevamente :)")
             menuzonas()
@@ -174,7 +174,7 @@ def menubusquedazonas():
               
 """)
         opcion = int(input("Seleccione una opcion: "))
-        if(opcion!=1) and (opcion!=2) and (opcion!=3) and (opcion!=4):
+        if opcion not in [1,2,3,4]:
             print("Opcion no existente!")
             print("Intenta nuevamente :)")
             menubusquedazonas()

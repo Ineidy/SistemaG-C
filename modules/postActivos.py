@@ -97,9 +97,8 @@ def postActivos():
         return print(tabulate(tablaactivos, headers="keys", tablefmt='rounded_grid'))
 
 def update(id):
-    activos ={}
     while True:
-        try:
+
             print("""
         
             QUE INFORMACION DESEA EDITAR
@@ -118,8 +117,9 @@ def update(id):
 
 """)
             
+            activos ={}
             opcion = int(input("Ingrese la opcion deseada: "))
-            if(opcion!=1) and (opcion!=2) and (opcion!=3) and (opcion!=4) and (opcion!=5) and (opcion!=6) and (opcion!=7) and (opcion!=8) and (opcion!=9) and (opcion!=10):
+            if opcion not in [1,2,3,5,4,5,6,7,8,9,10]:
                 print("Opcion no existente!")
                 print("Intente nuevamente :)")
                 update(id)
@@ -132,17 +132,13 @@ def update(id):
             if(opcion==3):
 
                     numeroserial = input("Ingrese el nuevo numero del serial: ")
-                    if(re.match(r"^[A-Z0-9-]{5,10}$", numeroserial)is not None):
-                        activos["CodTransaccion"]=numeroserial
-                    else:
-                        raise Exception ("El numero del serial no cumple con los estandares requeridos")
+                    activos["CodTransaccion"]=numeroserial
             if(opcion==4):
 
                     codigocampus = input("Ingrese el nuevo codigo de campus: ")
-                    if(re.match(r"^[A-Z0-9-]{5,10}$", numeroserial)is not None):
-                        activos["CodCampus"]=codigocampus
-                    else:
-                        raise Exception ("El codigo de campus no cumple con los estandares requeridos")
+
+                    activos["CodCampus"]=codigocampus
+
             if(opcion==5):
                     numerofor = int(input("Ingrese el nuevo numero de formulario: "))
                     activos["NroFormulario"]=numerofor
@@ -162,22 +158,21 @@ def update(id):
                     valorunitario = int(input("Ingresa el valor unitario del activo: "))
                     activos["ValorUnitario"]= valorunitario
 
-        except Exception as error:
-            print(error)
 
-        activoexistente = getActivosId(id)
-        if not activoexistente:
-            return {"Mensaje": "Activo no encontrado"}
-        
-        activoactualizado = {**activoexistente[0], **activos}
-        peticion = requests.put(f'http://154.38.171.54:5502/activos/{id}', data=json.dumps(activoactualizado))
-        res = peticion.json()
 
-        if peticion.status_code == 200:
-            res["Mensaje"] =  "Activo actualizado correctamente"
-        else: 
-            res["Mensaje"] = "Error al actualizar activos"
-        return res
+            activoexistente = getActivosId(id)
+            if not activoexistente:
+                return {"Mensaje": "Activo no encontrado"}
+            
+            activoactualizado = {**activoexistente[0], **activos}
+            peticion = requests.put(f'http://154.38.171.54:5502/activos/{id}', data=json.dumps(activoactualizado))
+            res = peticion.json()
+
+            if peticion.status_code == 200:
+                res["Mensaje"] =  "Activo actualizado correctamente"
+            else: 
+                res["Mensaje"] = "Error al actualizar activos"
+            return res
 
 def deleteactivos(id):
 
@@ -216,7 +211,7 @@ def menuActivos():
 
 """)
         opcion = int(input("Ingrese una opcion: "))
-        if(opcion!=1) and (opcion!=2) and (opcion!=3) and (opcion!=4) and (opcion!=5):
+        if opcion not in [1,2,3,4,5]:
             print("Opcion no existente!")
             print("Intenta nuevamente :)")
         elif(opcion==5):
@@ -258,6 +253,7 @@ def getAllArticulos0():
         if (val.get("idEstado") == "0"):
             articulo.append(
                 {
+                        "id": val.get('id'),
                         "NroItem": val.get('NroItem'),
                         "NroFormulario": val.get('NroFormulario'),
                         "Nombre": val.get('Nombre'),
@@ -334,6 +330,7 @@ def getAllArticulos1():
         if (val.get("idEstado") == "1"):
             articulo1.append(
                 {
+                        "id": val.get('id'),
                         "NroItem": val.get('NroItem'),
                         "NroFormulario": val.get('NroFormulario'),
                         "Nombre": val.get('Nombre'),
@@ -348,6 +345,7 @@ def getAllArticulos3():
         if (val.get("idEstado") == "3"):
             articulo3.append(
                 {
+                        "id": val.get('id'),
                         "NroItem": val.get('NroItem'),
                         "NroFormulario": val.get('NroFormulario'),
                         "Nombre": val.get('Nombre'),
@@ -363,6 +361,7 @@ def getAllArticulos2():
         if (val.get('idEstado') == "2"):
             articulo2.append(
                 {
+                        "id": val.get('id'),
                         "NroItem": val.get('NroItem'),
                         "NroFormulario": val.get('NroFormulario'),
                         "Nombre": val.get('Nombre'),
@@ -399,6 +398,7 @@ def getAllActivosItem(item):
     for val in getAllDataActivos():
         if(val.get('NroItem') == item):
             activosItem.append({
+                    "id": val.get('id'),
                     "NroItem": val.get('NroItem'),
                     "NroFormulario": val.get('NroFormulario'),
                     "Nombre": val.get('Nombre'),
@@ -411,6 +411,7 @@ def getAllActivosValorU(valorU):
     for val in getAllDataActivos():
         if(val.get('ValorUnitario') == valorU):
             activosvalor.append({
+                    "id": val.get('id'),
                     "NroItem": val.get('NroItem'),
                     "NroFormulario": val.get('NroFormulario'),
                     "Nombre": val.get('Nombre'),
@@ -424,6 +425,7 @@ def getAllActivosIdCategoria(idcate):
     for val in getAllDataActivos():
         if(val.get('idCategoria') == idcate):
             activosidcate.append({
+                    "id": val.get('id'),
                     "NroItem": val.get('NroItem'),
                     "NroFormulario": val.get('NroFormulario'),
                     "Nombre": val.get('Nombre'),
@@ -439,6 +441,7 @@ def getAllActivosIdTipo(idtipo):
     for val in getAllDataActivos():
         if(val.get('idTipo') == idtipo):
             activosidtipo.append({
+                    "id": val.get('id'),
                     "NroItem": val.get('NroItem'),
                     "NroFormulario": val.get('NroFormulario'),
                     "Nombre": val.get('Nombre'),
@@ -453,6 +456,7 @@ def getAllActivosIdMarca(idmarca):
     for val in getAllDataActivos():
         if(val.get('idTipo') == idmarca):
             activosidmarca.append({
+                    "id": val.get('id'),
                     "NroItem": val.get('NroItem'),
                     "NroFormulario": val.get('NroFormulario'),
                     "Nombre": val.get('Nombre'),
@@ -488,7 +492,7 @@ def menubuscar():
 """)
         
         opcion = int(input("Ingrese la opcion que desea filtrar: "))
-        if(opcion!=1) and (opcion!=2) and (opcion!=3) and (opcion!=4)and (opcion!=5)and (opcion!=6)and (opcion!=7)and (opcion!=8)and (opcion!=9)and (opcion!=10)and (opcion!=0):
+        if opcion not in [1,2,3,4,5,6,7,8,9,10,0]:
             print("Opcion no existente!")
             print("Intenta nuevamente :)")
             menubuscar()

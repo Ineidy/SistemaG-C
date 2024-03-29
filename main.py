@@ -3,7 +3,7 @@ import modules.postPersonal as postpersonal
 import modules.postActivos as postActivos
 import modules.postZonas as postZonas
 import modules.postReportes as postreportes
-
+import modules.movimientosActivos as movimientos
 
 
 if(__name__=='__main__'):
@@ -44,7 +44,7 @@ if(__name__=='__main__'):
                 
 """)
         opcion = int(input("Ingrese una opcion: "))
-        if(opcion!=1) and (opcion!=2) and (opcion!=3) and (opcion!=4) and (opcion!=5) and (opcion!=6) and (opcion!=7):
+        if opcion not in [1,2,3,4,5,6,7]:
             print("Opcion no existente!")
             print("Intente nuevamente :)")
             (__name__=='__main__')
@@ -59,6 +59,6 @@ if(__name__=='__main__'):
         elif(opcion==5):
             postreportes.MenuRepores()
         elif(opcion==6):
-            print("")
+            movimientos.menuMovimientosActivos()
         elif(opcion==7):
             break

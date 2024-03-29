@@ -56,7 +56,7 @@ def postAsignacionesPersona(idactivo):
         if activo.get("idEstado") == "2":
             print("EL ACTIVO ESTA DE BAJA, NO PUEDE SER ASIGNADO")
             return False
-        if activo.get("IdEstado")!="0":
+        if activo.get("IdEstado")=="1":
             print("EL ACTIVO YA ESTA ASIGNADO")
             return False
 
@@ -67,6 +67,8 @@ def postAsignacionesPersona(idactivo):
         link =  f"http://154.38.171.54:5502/activos/{idactivo}"
         respuesta = requests.put(link, json=activo)
         if respuesta.status_code == 200:
+            activo["idEstado"]="1"
+            requests.put(link, json=activo)
             print("Asignacion guardada correctamente")
             return True
         else: 
@@ -91,7 +93,7 @@ def postAsignacionesZonas(idactivo):
         if activo.get("idEstado") == "2":
             print("EL ACTIVO ESTA DADO DE BAJA, NO PUEDE SER ASIGNADO")
             return False
-        if activo.get("IdEstado")!="0":
+        if activo.get("IdEstado")=="1":
             print("EL ACTIVO YA ESTA ASIGNADO")
             return False
 

@@ -30,6 +30,9 @@ def MenuTipoAsigna():
 
 """)
         opcion = int(input("Ingrese la opcion deseada: "))
+        if(opcion!=1) and (opcion!=2) and (opcion!=0):
+            print("Opcion no existente!")
+            print("Intente nuevamente :)")
         if(opcion==0):
             break
         elif(opcion==1):
@@ -119,7 +122,9 @@ def menuAsignacionActivos():
 
 """)
         opcion = int(input("Ingrese una opcion: "))
-
+        if(opcion!=1) and (opcion!=2) and (opcion!=3):
+            print("Opcion no existente!")
+            print("Intente nuevamente :)")
         if(opcion==3):
             break
         elif(opcion==1):
@@ -159,6 +164,9 @@ def menupersonasOzonas():
 
 """)
         opcion=int(input("Ingrese la opcion que desea: "))
+        if(opcion!=1) and (opcion!=2) and (opcion!=0):
+            print("Opcion no existente!")
+            print("Intente nuevamente :)")
         if(opcion==1):
             idactivo = input("Ingrese el id del activo al que desea agregarle la asignacion: ")
             postAsignacionesPersona(idactivo)

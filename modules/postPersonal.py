@@ -56,18 +56,26 @@ def deletePersonas(id):
 def menuactualizar(id):
     while True:
         print("""
-QUE INFORMACION DESEA EDITAR
+              
 
-1. NROID(CC, NIT)
-2. NOMBRE
-3. EMAIL
-4. NUMERO MOVIL
-5. NUMERO DE CASA 
+                        QUE INFORMACION DESEA EDITAR
+
+                        1. NROID(CC, NIT)
+                        2. NOMBRE
+                        3. EMAIL
+                        4. NUMERO MOVIL
+                        5. NUMERO DE CASA 
+                                    
+
+
 
 """)
 
         personas ={}
         opcion= int(input("Ingrese la opcion deseada: "))
+        if(opcion!=1) and (opcion!=2) and (opcion!=3) and (opcion!=4) and (opcion!=5):
+            print("Opcion no existente!")
+            print("Intente nuevamente :)")
         if(opcion==1):
             nroId = input("ingrese el nuevo numero de identificacion: ")
             personas["nroId (CC, Nit)"]= nroId

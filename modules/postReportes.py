@@ -1,5 +1,6 @@
 from tabulate import tabulate
 import modules.postActivos as activos
+import modules.postAsignaciones as asignaciones
 
 
 
@@ -22,6 +23,9 @@ def ActivosCategoria():
 
 """)
         opcion = int(input("Ingrese la opcion que desea flitrar: "))
+        if(opcion!=1) and (opcion!=2) and (opcion!=3) and (opcion!=0):
+            print("Opcion no existente!")
+            print("Intente nuevamente :)")
         if(opcion==0):
             break
         elif(opcion==1):
@@ -52,6 +56,9 @@ def MenuRepores():
 """)
         
         opcion = int(input("Ingrese la opcion deseada: "))
+        if(opcion!=1) and (opcion!=2) and (opcion!=3) and (opcion!=4) and (opcion!=5) and (opcion!=6):
+            print("Opcion no existente!")
+            print("Intente nuevamente :)")
         if opcion==6:
             break
         elif(opcion==1):
@@ -60,3 +67,6 @@ def MenuRepores():
             ActivosCategoria()
         elif(opcion==3):
             print(tabulate(activos.getAllActivos2(), headers="keys", tablefmt='rounded_grid'))
+        elif(opcion==4):
+            id = input("Ingrese el id de el activo que desea buscar las asiganciones: ")
+            print(tabulate(asignaciones.getAllAsignaId(id), headers="keys", tablefmt='rounded_grid'))

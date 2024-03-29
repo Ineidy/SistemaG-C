@@ -93,14 +93,14 @@ def menuzonas():
 
 
               
-        MENU ZONAS
-              
+                    MENU ZONAS
+                        
 
-        1. AGREGAR
-        2. EDITAR
-        3. ELIMINAR
-        4. BUSCAR
-        5. REGRESAR AL MENU PRINCIPAL
+                    1. AGREGAR
+                    2. EDITAR
+                    3. ELIMINAR
+                    4. BUSCAR
+                    5. REGRESAR AL MENU PRINCIPAL
 
 """)
         opcion = int(input("Ingrese una opcion: "))

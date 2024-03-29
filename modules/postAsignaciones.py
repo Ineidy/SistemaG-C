@@ -56,6 +56,9 @@ def postAsignacionesPersona(idactivo):
         if activo.get("idEstado") == "2":
             print("EL ACTIVO ESTA DE BAJA, NO PUEDE SER ASIGNADO")
             return False
+        if activo.get("IdEstado")!="0":
+            print("EL ACTIVO YA ESTA ASIGNADO")
+            return False
 
         asignaciones = activo.get("asignaciones", [])
         asignaciones.append(nuevainfo)
@@ -87,6 +90,9 @@ def postAsignacionesZonas(idactivo):
     if activo:
         if activo.get("idEstado") == "2":
             print("EL ACTIVO ESTA DADO DE BAJA, NO PUEDE SER ASIGNADO")
+            return False
+        if activo.get("IdEstado")!="0":
+            print("EL ACTIVO YA ESTA ASIGNADO")
             return False
 
         asignaciones = activo.get("asignaciones", [])

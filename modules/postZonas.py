@@ -2,12 +2,21 @@ import requests
 import json
 import re
 from tabulate import tabulate
+import modules.postAsignaciones as asigna
 
 
 def getDataZonas():
     peticion = requests.get("http://154.38.171.54:5502/zonas")
     data = peticion.json()
     return data
+
+
+def obtenerZona(id):
+    peticion = requests.get(f"http://ejemplo.com/api/zonas/{id}")
+    if peticion.status_code == 200:
+        return peticion.json()
+    else:
+        return None
 
 
 def getPostZonasId(codigo):
@@ -81,10 +90,18 @@ def updatezonas(id):
 
 
 def deleteZonas(id):
-    peticion = requests.delete(f"http://154.38.171.54:5502/zonas/{id}")
-    if peticion.status_code == 200:
-        print("Zona Eliminada")
+    zona = obtenerZona(id)
+    if zona:
+        asignaActiv = asigna.obtenerAsignaId(id)
+        if asignaActiv:
+            print("ESTA ZONA TIENE UNA ASIGNACION, NO PUEDE SER ELIMINADA")
+            return False
 
+        if True:
+            peticion = requests.delete(f"http://154.38.171.54:5502/zonas/{id}")
+            if peticion.status_code == 200:
+                print("Zona Eliminada") 
+                return True
 
 def menuzonas():
     while True:

@@ -3,6 +3,7 @@ import requests
 import re
 import json
 from tabulate import tabulate
+import modules.postActivos as activ
 
 
 
@@ -49,9 +50,25 @@ def postPersonal():
         return print(tabulate(tablaactivos, headers="keys", tablefmt='rounded_grid'))
 
 def deletePersonas(id):
-    peticion = requests.delete(f"http://154.38.171.54:5502/personas/{id}")
-    if peticion.status_code == 200:
-        print("Persona Eliminada")
+    persona = getpersonasId(id)
+    if persona:
+        asignacionesactivos = []
+        activos = activ.getAllDataActivos()
+        for activo in activos:
+            asignaciones = activo.get("asignaciones", [])
+            for asignacion in asignaciones:
+                if "TipoAsignacion" in asignacion and asignacion["TipoAsignacion"]=="Persona" and asignacion["AsignadoA"] == id:
+                    asignacionesactivos.append(activo["NroItem"])
+                    break
+
+        if asignacionesactivos:
+            print("NO SE PUEDE ELIMINAR UNA PERSONA QUE TENGA ACTIVOS ASIGNADOS")
+            menuPersonal()
+        
+
+        peticion = requests.delete(f"http://154.38.171.54:5502/personas/{id}")
+        if peticion.status_code == 200:
+            print("Persona Eliminada")
 
 def menuactualizar(id):
     while True:
@@ -136,7 +153,7 @@ def menuPersonal():
         elif(opcion==1):
             print(tabulate(postPersonal(), headers="keys", tablefmt='rounded_grid'))
         elif(opcion==3):
-            id = input("Ingresa el id de la persona que quiere elimina: r")
+            id = input("Ingresa el id de la persona que quiere elimina: ")
             print(tabulate(deletePersonas(id), headers="keys", tablefmt='rounded_grid'))
         elif(opcion==4): 
             print(menuBusqueda())

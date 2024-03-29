@@ -11,8 +11,8 @@ def getDataAsignaciones():
     dataAsignaciones = peticionAsignaciones.json()
     return dataAsignaciones
 
-def obtenerAsignaId(idactivo):
-    peticionAsigna = requests.get(f"http://154.38.171.54:5502/activos/{idactivo}")
+def obtenerAsignaId(id):
+    peticionAsigna = requests.get(f"http://154.38.171.54:5502/activos/{id}")
     dataAsignaId= peticionAsigna.json()
     return dataAsignaId
 
@@ -53,12 +53,18 @@ def postAsignacionesPersona(idactivo):
     }
     activo = obtenerAsignaId(idactivo)
     if activo:
+        if activo.get("idEstado")== "3":
+            print("EL ACTIVO ESTA EN RAPARACION Y/O GARANTIA, NO PUEDE SER ASIGNADO")
+            return False
+
         if activo.get("idEstado") == "2":
             print("EL ACTIVO ESTA DE BAJA, NO PUEDE SER ASIGNADO")
             return False
         if activo.get("IdEstado")=="1":
             print("EL ACTIVO YA ESTA ASIGNADO")
             return False
+        if activo.get("idEstado") == "0":
+            True
 
         asignaciones = activo.get("asignaciones", [])
         asignaciones.append(nuevainfo)
@@ -90,12 +96,18 @@ def postAsignacionesZonas(idactivo):
     }
     activo = obtenerAsignaId(idactivo)
     if activo:
+        if activo.get("idEstado")== "3":
+            print("EL ACTIVO ESTA EN RAPARACION Y/O GARANTIA, NO PUEDE SER ASIGNADO")
+            return False
+        if activo.get("idEstado") == "0":
+            True
         if activo.get("idEstado") == "2":
-            print("EL ACTIVO ESTA DADO DE BAJA, NO PUEDE SER ASIGNADO")
+            print("EL ACTIVO ESTA DE BAJA, NO PUEDE SER ASIGNADO")
             return False
         if activo.get("IdEstado")=="1":
             print("EL ACTIVO YA ESTA ASIGNADO")
             return False
+        
 
         asignaciones = activo.get("asignaciones", [])
         asignaciones.append(nuevainfo)

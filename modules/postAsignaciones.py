@@ -102,6 +102,8 @@ def postAsignacionesZonas(idactivo):
         link =  f"http://154.38.171.54:5502/activos/{idactivo}"
         respuesta = requests.put(link, json=activo)
         if respuesta.status_code == 200:
+            activo["idEstado"]="1"
+            requests.put(link, json=activo)
             print("Asignacion guardada correctamente")
             return True
         else: 

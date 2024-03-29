@@ -58,3 +58,5 @@ def MenuRepores():
             print(tabulate(activos.getAllActivos(), headers="keys", tablefmt='rounded_grid'))
         elif(opcion==2):
             ActivosCategoria()
+        elif(opcion==3):
+            print(tabulate(activos.getAllActivos2(), headers="keys", tablefmt='rounded_grid'))

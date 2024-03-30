@@ -41,7 +41,7 @@ if(__name__=='__main__'):
         5. REPORTES
         6. MOVIMIENTO DE ACTIVOS
         7. SALIR
-                
+                                    
 """)
         opcion = int(input("Ingrese una opcion: "))
         if opcion not in [1,2,3,4,5,6,7]:

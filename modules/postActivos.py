@@ -2,6 +2,9 @@ import requests
 import re
 import json
 from tabulate import tabulate
+from datetime import datetime
+import modules.movimientosActivos as mov 
+
 
 def getAllDataActivos():
     peticionactivos = requests.get("http://154.38.171.54:5502/activos")
@@ -19,7 +22,7 @@ def postActivos():
         try:
 
             if not activos.get("NroItem"):
-                nmeroitem = input("Ingrese el numero de item: ")
+                nmeroitem = input("Ingrese el numero de item (SOLO NUMEROS): ")
                 if(re.match(r'[0-9]+$', nmeroitem) is not None):
                     nmeroitem = int(nmeroitem)
                 activos["NroItem"] = nmeroitem
@@ -31,19 +34,19 @@ def postActivos():
             # else:
             #         raise Exception ("El codigo de transaccion no cumple con los estandares requeridos")
             if not activos.get("NroSerial"):
-                numeroserial = input("Ingrese el numero del serial: ")
+                numeroserial = input("Ingrese el numero del serial(5-10 CARACTERES ENTRE LETRAS MAYUSCULAS Y NUMEROS): ")
                 if(re.match(r"^[A-Z0-9]{5,10}$", numeroserial)is not None):
                     activos["NroSerial"]=numeroserial
                 else:
                     raise Exception ("El numero del serial no cumple con los estandares requeridos")
             if not activos.get("CodCampus"):
-                codigocampus = input("Ingrese el codigo de campus: ")
+                codigocampus = input("Ingrese el codigo de campus(5-10 CARACTERES ENTRE LETRAS MAYUSCULAS Y NUMEROS): ")
                 if(re.match(r"^[A-Z0-9-]{5,10}$", numeroserial)is not None):
                     activos["CodCampus"]=codigocampus
                 else:
                     raise Exception ("El codigo de campus no cumple con los estandares requeridos")
             if not activos.get("NroFormulario"):
-                numerofor = input("Ingrese el numero de formulario: ")
+                numerofor = input("Ingrese el numero de formulario(SOLO NUMEROS): ")
                 if(re.match(r'[0-9]+$', numerofor) is not None):
                     numerofor= int(numerofor)
                 activos["NroFormulario"]=numerofor
@@ -57,20 +60,63 @@ def postActivos():
             if not activos.get("EmpresaResponsable"):
                 activos["EmpresaResponsable"]=("Campuslands")
             if not activos.get("idMarca"):
+                print("""
+                      
+
+                      IDS DE LAS MARCAS
+
+
+                      1. LG
+                      2.COMPUMAX
+                      3.LOGITECH
+                      4.BENQ
+                      5.ASUS
+                      6.LENOVO
+                      7.HP
+
+""")
                 idmarca=input("Ingrese el id de la marca: ")
+
                 if(re.match(r'[0-9]+$', idmarca) is not None):
                     activos["idMarca"] = idmarca
                 else:
                     raise Exception ("El id de la marca no cumple con los estandares requeridos")
                 
             if not activos.get("idCategoria"):
+                print("""
+                      
+
+                    IDS CATEGORIAS DE ACTIVOS
+                      
+                      1. EQUIPO DE COMPUTO
+                      2. ELECTRODOMESTICO
+                      3. JUEGO
+
+
+""")
                 idcategoria = input("Ingrese el id de la categoria: ")
+
                 if(re.match(r'[0-9]+$', idmarca) is not None):
                     activos["idCategoria"]=idcategoria
                 else:
                     raise Exception ("El id de la categoria no cumple con los estandares requeridos")
             if not activos.get("idTipo"):
+                print("""
+                      
+                    IDS TIPOS DE ACTIVO
+                      
+                      1. MONITOR
+                      2. CPU
+                      3. TECLADO
+                      4. MOUSE
+                      5. AIRE ACONDICIONADO
+                      6. PORTATIL
+                      7. TV
+                      8. ARCADE
+
+""")
                 idtipo=input("Ingrese el id del tipo: ")
+
                 if(re.match(r'[0-9]+$', idtipo) is not None):
                     activos["idTipo"]=idtipo
                 else:
@@ -82,7 +128,7 @@ def postActivos():
                 else:
                     raise Exception ("El valor unitario no cumple con los estandares requeridos")
             if not activos.get("idEstado"):
-                activos["idEstados"]= str(0)
+                activos["idEstado"]= str(0)
             if not activos.get("historialActivos"):
                 activos["historialActivos"] = []
             if not activos.get("asignaciones"):
@@ -96,95 +142,31 @@ def postActivos():
         tablaactivos = [activos]
         return print(tabulate(tablaactivos, headers="keys", tablefmt='rounded_grid'))
 
-def update(id):
-    while True:
 
-            print("""
-        
-            QUE INFORMACION DESEA EDITAR
-        
-            1. NroItem
-            2. CodTransaccion
-            3. NroSerial
-            4. CodCampus
-            5. NroFormulario
-            6. Nombre
-            7. idMarca
-            8. idCategoria
-            9. idTipo
-            10. ValorUnitario
-
-
-""")
-            
-            activos ={}
-            opcion = int(input("Ingrese la opcion deseada: "))
-            if opcion not in [1,2,3,5,4,5,6,7,8,9,10]:
-                print("Opcion no existente!")
-                print("Intente nuevamente :)")
-                update(id)
-            if(opcion==1):
-                nmeroitem = int(input("Ingrese el nuevo numero de item: "))
-                activos["NroItem"] = nmeroitem
-            if(opcion==2):
-                codigotransaccion = int(input("Ingrese el nuevo codigo de la transaccion: "))
-                activos["CodTransaccion"]=codigotransaccion
-            if(opcion==3):
-
-                    numeroserial = input("Ingrese el nuevo numero del serial: ")
-                    activos["CodTransaccion"]=numeroserial
-            if(opcion==4):
-
-                    codigocampus = input("Ingrese el nuevo codigo de campus: ")
-
-                    activos["CodCampus"]=codigocampus
-
-            if(opcion==5):
-                    numerofor = int(input("Ingrese el nuevo numero de formulario: "))
-                    activos["NroFormulario"]=numerofor
-            if(opcion==6):
-                    nombreActivo = input("Ingrese el nuevo nombre del activo: ")
-                    activos["Nombre"]=nombreActivo
-            if(opcion==7):
-                    idmarca=input("Ingrese el nuevo id de la marca: ")
-                    activos["idMarca"] = idmarca
-            if(opcion==8):
-                    idcategoria = int(input("Ingrese el id de la categoria: "))
-                    activos["idCategoria"]=idcategoria
-            if(opcion==9):
-                    idtipo=int(input("Ingrese el id del tipo: "))
-                    activos["idTipo"]=idtipo
-            if(opcion==10):
-                    valorunitario = int(input("Ingresa el valor unitario del activo: "))
-                    activos["ValorUnitario"]= valorunitario
-
-
-
-            activoexistente = getActivosId(id)
-            if not activoexistente:
-                return {"Mensaje": "Activo no encontrado"}
-            
-            activoactualizado = {**activoexistente[0], **activos}
-            peticion = requests.put(f'http://154.38.171.54:5502/activos/{id}', data=json.dumps(activoactualizado))
-            res = peticion.json()
-
-            if peticion.status_code == 200:
-                res["Mensaje"] =  "Activo actualizado correctamente"
-            else: 
-                res["Mensaje"] = "Error al actualizar activos"
-            return res
 
 def deleteactivos(id):
 
     activo_encontrado = getActivosId(id)
     if not activo_encontrado:
         return {"Mensaje": "Activo no encontrado"}
-    Activoactualizado = {**activo_encontrado[0], "idEstado": "2"}
+
+    activo = activo_encontrado[0]
+
+
+    historial={
+        "NroId": 1,
+        "Fecha":datetime.now().strftime("%Y-%d-%m"),
+        "tipoMov": "2"
+    }
+    activo["historialActivos"].append(historial)
+
+    Activoactualizado = {**activo, "idEstado": "2"}
     peticion = requests.put(f"http://154.38.171.54:5502/activos/{id}", data=json.dumps(Activoactualizado))
     res = peticion.json()
 
     if peticion.status_code == 200:
         res["Mensaje"] = "Estado actualizado correctamente!"
+
     else: 
         res["Mensaje"] = "Error en la actualizacion del estado!"
     return [res]
@@ -525,3 +507,121 @@ def menubuscar():
         elif(opcion==10):
             idmarca = input("Ingrese el id de la marca que desea filtrar: ")
             print(tabulate(getAllActivosIdMarca(idmarca),headers="keys", tablefmt='rounded_grid'))
+
+
+
+
+def update(id):
+    while True:
+
+        print("""
+    
+        QUE INFORMACION DESEA EDITAR
+    
+        1. NroItem
+        2. NroSerial
+        3. CodCampus
+        4. NroFormulario
+        5. Nombre
+        6. idMarca
+        7. idCategoria
+        8. idTipo
+        9. ValorUnitario
+        0. Salir
+
+
+""")
+        
+        activos = {}
+        opcion = int(input("Ingrese la opcion deseada: "))
+        if opcion not in [1,2,3,5,4,5,6,7,8,9,0]:
+            print("Opcion no existente!")
+            print("Intente nuevamente :)")
+            update(id)
+
+        if opcion==1:
+                nmeroitem = input("Ingrese el numero de item (SOLO NUMEROS): ")
+                activos["NroItem"] = nmeroitem
+        if opcion == 2:
+                numeroserial = input("Ingrese el numero del serial(5-10 CARACTERES ENTRE LETRAS MAYUSCULAS Y NUMEROS): ")
+                activos["NroSerial"]=numeroserial
+        if opcion==3:
+            codigocampus = input("Ingrese el codigo de campus(5-10 CARACTERES ENTRE LETRAS MAYUSCULAS Y NUMEROS): ")
+            activos["CodCampus"]=codigocampus
+        if opcion == 4:
+            numerofor = input("Ingrese el numero de formulario(SOLO NUMEROS): ")
+            activos["NroFormulario"] = numerofor
+        if opcion == 5: 
+                nombreActivo = input("Ingrese el nombre del activo: ")
+                activos["Nombre"]=nombreActivo
+        if opcion == 6: 
+                print("""
+                      
+
+                      IDS DE LAS MARCAS
+
+
+                      1. LG
+                      2.COMPUMAX
+                      3.LOGITECH
+                      4.BENQ
+                      5.ASUS
+                      6.LENOVO
+                      7.HP
+
+""")
+                idmarca=input("Ingrese el id de la marca: ")
+                activos["idMarca"] = idmarca
+        if opcion == 7:
+                print("""
+                      
+
+                    IDS CATEGORIAS DE ACTIVOS
+                      
+                      1. EQUIPO DE COMPUTO
+                      2. ELECTRODOMESTICO
+                      3. JUEGO
+
+
+""")
+                idcategoria = input("Ingrese el id de la categoria: ")
+                activos["idCategoria"]=idcategoria
+        if opcion ==8:
+                print("""
+                      
+                    IDS TIPOS DE ACTIVO
+                      
+                      1. MONITOR
+                      2. CPU
+                      3. TECLADO
+                      4. MOUSE
+                      5. AIRE ACONDICIONADO
+                      6. PORTATIL
+                      7. TV
+                      8. ARCADE
+
+""")
+                idtipo = input("Ingrese el id del tipo: ")
+                activos["idTipo"]=idtipo
+        if opcion == 9:
+                valorunitario = input("Ingresa el valor unitario del activo: ")
+                activos["ValorUnitario"]= valorunitario
+        if opcion ==8: 
+            break
+
+
+
+
+
+
+
+
+        activoexistente = getActivosId(id)
+        if not activoexistente:
+            return {"Mensaje": "Activo no encontrado"}
+        activoactualizado = {**activoexistente[0], **activos}
+        peticion = requests.put(f'http://154.38.171.54:5502/activos/{id}', data=json.dumps(activoactualizado, indent=4))
+        res = peticion.json()
+        tablaactualuzar = [activos]
+        return print(tabulate(tablaactualuzar, headers="keys", tablefmt='rounded_grid'))
+

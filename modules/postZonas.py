@@ -90,14 +90,6 @@ def updatezonas(id):
 
 
 def deleteZonas(id):
-    zona = obtenerZona(id)
-    if zona:
-        asignaActiv = asigna.obtenerAsignaId(id)
-        if asignaActiv:
-            print("ESTA ZONA TIENE UNA ASIGNACION, NO PUEDE SER ELIMINADA")
-            return False
-
-        if True:
             peticion = requests.delete(f"http://154.38.171.54:5502/zonas/{id}")
             if peticion.status_code == 200:
                 print("Zona Eliminada") 

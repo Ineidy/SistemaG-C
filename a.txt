@@ -21,3 +21,52 @@ idEstado	"0"
 id	"10"
 historialActivos	[]
 asignaciones	
+
+
+
+
+def update(id):
+    while True:
+
+            print("""
+        
+            QUE INFORMACION DESEA EDITAR
+        
+            1. NroItem
+            2. CodTransaccion
+            3. NroSerial
+            4. CodCampus
+            5. NroFormulario
+            6. Nombre
+            7. idMarca
+            8. idCategoria
+            9. idTipo
+            10. ValorUnitario
+
+
+""")
+            
+            activos ={}
+            opcion = int(input("Ingrese la opcion deseada: "))
+            if opcion not in [1,2,3,5,4,5,6,7,8,9,10]:
+                print("Opcion no existente!")
+                print("Intente nuevamente :)")
+                update(id)
+
+
+
+
+            activoexistente = getActivosId(id)
+            if not activoexistente:
+                return {"Mensaje": "Activo no encontrado"}
+            
+            activoactualizado = {**activoexistente[0], **activos}
+            peticion = requests.put(f'http://154.38.171.54:5502/activos/{id}', data=json.dumps(activoactualizado))
+            res = peticion.json()
+
+            if peticion.status_code == 200:
+                res["Mensaje"] =  "Activo actualizado correctamente"
+            else: 
+                res["Mensaje"] = "Error al actualizar activos"
+            return res
+    

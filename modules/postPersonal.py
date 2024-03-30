@@ -27,18 +27,18 @@ def postPersonal():
         persona = {
 
     "id": identificacion,
-    "nroId (CC, Nit)": input("ingrese el nuevo numero de cedula: "),
-    "Nombre": input("Ingrese el nuevo nombre: "),
-    "Email": input("ingrese el nuevo correo electronico: "),
+    "nroId (CC, Nit)": input("ingrese el nuevo numero de cedula(SOLO NUMEROS): "),
+    "Nombre": input("Ingrese el nuevo nombre(INICIALES EN MAYUSCULA): "),
+    "Email": input("ingrese el nuevo correo electronico(EJM. juanperez@example.com): "),
     "Telefonos": [
         {
         "movil": {
             "id": identificacion,
-            "num": input("Ingrese el nuevo numero de telefono: ")
+            "num": input("Ingrese el nuevo numero de telefono movil(SOLO NUMEROS): ")
         },
         "casa": {
             "id": identificacion,
-            "num": input("ingrese el nuevo movil de casa: ")
+            "num": input("ingrese el nuevo movil de casa(SOLO NUMEROS): ")
         }
         }]
     }
@@ -80,9 +80,8 @@ def menuactualizar(id):
                         1. NROID(CC, NIT)
                         2. NOMBRE
                         3. EMAIL
-                        # 4. NUMERO MOVIL
-                        # 5. NUMERO DE CASA 
-                                    
+                        0. SALIR
+
 
 
 
@@ -93,6 +92,7 @@ def menuactualizar(id):
         if opcion not in [1,2,3,5,4]:
             print("Opcion no existente!")
             print("Intente nuevamente :)")
+            menuactualizar()
         if(opcion==1):
             nroId = input("ingrese el nuevo numero de identificacion: ")
             personas["nroId (CC, Nit)"]= nroId
@@ -102,13 +102,9 @@ def menuactualizar(id):
         if(opcion==3):
             email = input("ingrese el nuevo numero de email: ")
             personas["Email"]=email
-        # if(opcion==4):
-        #     nummovil = input("Ingrese el nuevo numero Movil: ")
-        #     personas["num"] = nummovil
-        # if(opcion==5):
-        #     numcasa = input("Ingrese el nuevo numero de la casa: ")
-        #     personas["num"] = numcasa
 
+        if(opcion==0):
+            break
 
         activoexistente = getpersonasId(id)
         if not activoexistente:

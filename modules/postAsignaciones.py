@@ -165,6 +165,7 @@ def getAllAsignaId(id):
                     "NroFormulario": val.get('NroFormulario'),
                     "Nombre": val.get('Nombre'),
                     "idEstado": val.get('idEstado'),
+                    "asignaciones =>": val.get(''),
                     "NroAsignacion": asignacion.get('NroAsignacion'),
                     "FechaAsignación":  asignacion.get('FechaAsignación'),
                     "TipoAsignacion": asignacion.get('TipoAsignacion'),
@@ -172,6 +173,26 @@ def getAllAsignaId(id):
                     
             })
     return asignacionid
+
+
+def getAllHistorialId(id):
+    historialid =[]
+    for val in activos.getActivosId(id):
+        historial = val.get('historialActivos', [])
+        for historiales in historial:
+            historialid.append({
+                    "NroItem": val.get('NroItem'),
+                    "NroFormulario": val.get('NroFormulario'),
+                    "Nombre": val.get('Nombre'),
+                    "idEstado": val.get('idEstado'),
+                    "historial =>": val.get(''),
+                    "NroId": historiales.get('NroId'),
+                    "Fecha":  historiales.get('Fecha'),
+                    "tipoMov": historiales.get('tipoMov'),
+                    "idRespMov": historiales.get('idRespMov')
+            })
+
+    return historialid
 
 
 

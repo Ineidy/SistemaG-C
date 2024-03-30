@@ -70,3 +70,6 @@ def MenuRepores():
         elif(opcion==4):
             id = input("Ingrese el id de el activo que desea buscar las asiganciones: ")
             print(tabulate(asignaciones.getAllAsignaId(id), headers="keys", tablefmt='rounded_grid'))
+        elif opcion==5:
+            id = input("Ingrese el id del activo del que desea bucar el historial")
+            print(tabulate(asignaciones.getAllHistorialId(id), headers="keys", tablefmt='rounded_grid'))

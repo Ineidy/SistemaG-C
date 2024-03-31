@@ -5,6 +5,9 @@ import modules.postPersonal as Personal
 import modules.postActivos as activos 
 from datetime import datetime
 
+class colors:
+    RESET = '\033[0m'
+    BOLDYELLOW = '\033[1;33m'
 
 def getDataAsignaciones():
     peticionAsignaciones = requests.get("http://154.38.171.54:5502")
@@ -18,7 +21,7 @@ def obtenerAsignaId(id):
 
 def MenuTipoAsigna():
     while True:
-        print("""
+        print(colors.BOLDYELLOW+"""
               
                     QUE TIPO DE ASIGNACION USARA?
                                 
@@ -28,11 +31,11 @@ def MenuTipoAsigna():
                             2. ZONA
                             0. SALIR
 
-""")
+"""+colors.RESET)
         opcion = int(input("Ingrese la opcion deseada: "))
         if opcion not in [1,2,0]:
-            print("Opcion no existente!")
-            print("Intente nuevamente :)")
+            print(colors.BOLDYELLOW+"Opcion no existente!"+colors.RESET)
+            print(colors.BOLDYELLOW+"Intente nuevamente :)"+colors.RESET)
         if(opcion==0):
             break
         elif(opcion==1):
@@ -44,24 +47,36 @@ def MenuTipoAsigna():
 
 def postAsignacionesPersona(idactivo):
 
-    nuevainfo ={
-        "NroAsignacion": +1,
-        "FechaAsignación": input("Ingrese la fecha EN EL SIGUIENTE FORMATO:  YYYY-MM-DD: "),
-        "TipoAsignacion": "Persona",
-        "AsignadoA": input("Ingrese el id de la persona a la que le asignara el activo: ")
+    NroID = input("Ingrese el id de la asignacion: ")
+    fechaasig = input("Ingrese la fecha EN EL SIGUIENTE FORMATO (YYYY-DD-MM): ")
+    asignadoa = input("Ingrese el id de la zona a la que le asignara el activo: ")
+    responsable = input("Ingrese el id del encargado del movimiento del activo: ")
 
+    nuevainfo ={
+        "NroAsignacion": NroID,
+        "FechaAsignación": fechaasig,
+        "TipoAsignacion": "Persona",
+        "AsignadoA": asignadoa
     }
+
+    nuevohistorial ={
+                "NroId":NroID,
+                "FechaAsignacion": fechaasig,
+                "TipoMov": "1",
+                "idRespMov": responsable
+    }
+
     activo = obtenerAsignaId(idactivo)
     if activo:
         if activo.get("idEstado")== "3":
-            print("EL ACTIVO ESTA EN RAPARACION Y/O GARANTIA, NO PUEDE SER ASIGNADO")
+            print(colors.BOLDYELLOW+"EL ACTIVO ESTA EN RAPARACION Y/O GARANTIA, NO PUEDE SER ASIGNADO"+colors.RESET)
             return False
 
         if activo.get("idEstado") == "2":
-            print("EL ACTIVO ESTA DE BAJA, NO PUEDE SER ASIGNADO")
+            print(colors.BOLDYELLOW+"EL ACTIVO ESTA DE BAJA, NO PUEDE SER ASIGNADO"+colors.RESET)
             return False
         if activo.get("IdEstado")=="1":
-            print("EL ACTIVO YA ESTA ASIGNADO")
+            print(colors.BOLDYELLOW+"EL ACTIVO YA ESTA ASIGNADO"+colors.RESET)
             return False
         if activo.get("idEstado") == "0":
             True
@@ -70,42 +85,63 @@ def postAsignacionesPersona(idactivo):
         asignaciones.append(nuevainfo)
         activo["asignaciones"] = asignaciones
 
+
+
+        activoH = activo.get("historialActivos", [])
+        activoH.append(nuevohistorial)
+        activo["historialActivos"] = activoH
+
+
+
+
         link =  f"http://154.38.171.54:5502/activos/{idactivo}"
         respuesta = requests.put(link, json=activo)
         if respuesta.status_code == 200:
             activo["idEstado"]="1"
             requests.put(link, json=activo)
-            print("Asignacion guardada correctamente")
+            print(colors.BOLDYELLOW+"Asignacion guardada correctamente"+colors.RESET)
             return True
         else: 
-            print("Error al guardad la asignacion")
+            print(colors.BOLDYELLOW+"Error al guardad la asignacion"+colors.RESET)
             return False
     else: 
-        print("Activo no encontrado")
+        print(colors.BOLDYELLOW+"Activo no encontrado"+colors.RESET)
         return False
     
 
 
 def postAsignacionesZonas(idactivo):
-    nuevainfo ={
-        "NroAsignacion": +1,
-        "FechaAsignación": input("Ingrese la fecha EN EL SIGUIENTE FORMATO:  YYYY-MM-DD: "),
-        "TipoAsignacion": "Zona",
-        "AsignadoA": input("Ingrese el id de la zona a la que le asignara el activo: ")
 
+    NroID = input("Ingrese el id de la asignacion: ")
+    fechaasig = input("Ingrese la fecha EN EL SIGUIENTE FORMATO (YYYY-DD-MM): ")
+    asignadoa = input("Ingrese el id de la zona a la que le asignara el activo: ")
+    responsable = input("Ingrese el id del encargado del movimiento del activo: ")
+
+    nuevainfo ={
+        "NroAsignacion": NroID,
+        "FechaAsignación": fechaasig,
+        "TipoAsignacion": "Zona",
+        "AsignadoA": asignadoa
+
+    }
+    nuevohistorial ={
+                "NroId":NroID,
+                "FechaAsignacion": fechaasig,
+                "TipoMov": "1",
+                "idRespMov": responsable
     }
     activo = obtenerAsignaId(idactivo)
     if activo:
         if activo.get("idEstado")== "3":
-            print("EL ACTIVO ESTA EN RAPARACION Y/O GARANTIA, NO PUEDE SER ASIGNADO")
+            print(colors.BOLDYELLOW+"EL ACTIVO ESTA EN RAPARACION Y/O GARANTIA, NO PUEDE SER ASIGNADO"+colors.RESET)
             return False
         if activo.get("idEstado") == "0":
             True
         if activo.get("idEstado") == "2":
-            print("EL ACTIVO ESTA DE BAJA, NO PUEDE SER ASIGNADO")
+            print(colors.BOLDYELLOW+"EL ACTIVO ESTA DE BAJA, NO PUEDE SER ASIGNADO"+colors.RESET)
             return False
         if activo.get("IdEstado")=="1":
-            print("EL ACTIVO YA ESTA ASIGNADO")
+            print(colors.BOLDYELLOW+"EL ACTIVO YA ESTA ASIGNADO"+colors.RESET)
             return False
         
 
@@ -113,24 +149,33 @@ def postAsignacionesZonas(idactivo):
         asignaciones.append(nuevainfo)
         activo["asignaciones"] = asignaciones
 
+        activoH = activo.get("historialActivos", [])
+        activoH.append(nuevohistorial)
+        activo["historialActivos"] = activoH
+
+
+
+
         link =  f"http://154.38.171.54:5502/activos/{idactivo}"
         respuesta = requests.put(link, json=activo)
         if respuesta.status_code == 200:
             activo["idEstado"]="1"
+
+
             requests.put(link, json=activo)
-            print("Asignacion guardada correctamente")
+            print(colors.BOLDYELLOW+"Asignacion guardada correctamente"+colors.RESET)
             return True
         else: 
-            print("Error al guardad la asignacion")
+            print(colors.BOLDYELLOW+"Error al guardad la asignacion"+colors.RESET)
             return False
     else: 
-        print("Activo no encontrado")
+        print(colors.BOLDYELLOW+"Activo no encontrado"+colors.RESET)
         return False
 
 
 def menuAsignacionActivos():
     while True:
-        print("""
+        print(colors.BOLDYELLOW+"""
 
               
 
@@ -142,11 +187,11 @@ def menuAsignacionActivos():
         2. BUSCAR ASIGNACION
         3. REGRESAR AL MENU PRINCIPAL
 
-""")
+"""+colors.RESET)
         opcion = int(input("Ingrese una opcion: "))
         if opcion not in [1,2,3]:
-            print("Opcion no existente!")
-            print("Intente nuevamente :)")
+            print(colors.BOLDYELLOW+"Opcion no existente!"+colors.RESET)
+            print(colors.BOLDYELLOW+"Intente nuevamente :)"+colors.RESET)
         if(opcion==3):
             break
         elif(opcion==1):
@@ -198,18 +243,18 @@ def getAllHistorialId(id):
 
 def menupersonasOzonas(): 
     while True:
-        print("""
+        print(colors.BOLDYELLOW+"""
                         QUE TIPO DE ASIGNACION ES:
                                 
                                 1. PERSONA
                                 2. ZONA
                                 0. SALIR
 
-""")
+"""+colors.RESET)
         opcion=int(input("Ingrese la opcion que desea: "))
         if opcion not in [1,2,0]:
-            print("Opcion no existente!")
-            print("Intente nuevamente :)")
+            print(colors.BOLDYELLOW+"Opcion no existente!"+colors.RESET)
+            print(colors.BOLDYELLOW+"Intente nuevamente :)"+colors.RESET)
         if(opcion==1):
             idactivo = input("Ingrese el id del activo al que desea agregarle la asignacion: ")
             postAsignacionesPersona(idactivo)

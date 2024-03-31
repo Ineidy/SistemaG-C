@@ -6,11 +6,16 @@ import modules.postReportes as postreportes
 import modules.movimientosActivos as movimientos
 
 
+class colors:
+    RESET = '\033[0m'
+    BOLDYELLOW = '\033[1;33m'
+
+
 if(__name__=='__main__'):
 
     while True:
 
-        print("""
+        print(colors.BOLDYELLOW + """
 
 
 
@@ -42,7 +47,7 @@ if(__name__=='__main__'):
         6. MOVIMIENTO DE ACTIVOS
         7. SALIR
                                     
-""")
+"""+ colors.RESET) 
         opcion = int(input("Ingrese una opcion: "))
         if opcion not in [1,2,3,4,5,6,7]:
             print("Opcion no existente!")

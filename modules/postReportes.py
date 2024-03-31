@@ -5,11 +5,14 @@ import modules.postAsignaciones as asignaciones
 
 
 
+class colors:
+    RESET = '\033[0m'
+    BOLDYELLOW = '\033[1;33m'
 
 
 def ActivosCategoria():
     while True:
-        print("""
+        print(colors.BOLDYELLOW+"""
               
                                         
                             CATEGORIAS
@@ -21,11 +24,11 @@ def ActivosCategoria():
                                         
 
 
-""")
+"""+colors.RESET)
         opcion = int(input("Ingrese la opcion que desea flitrar: "))
         if opcion not in [1,2,3,0]:
-            print("Opcion no existente!")
-            print("Intente nuevamente :)")
+            print(colors.BOLDYELLOW+"Opcion no existente!"+colors.RESET)
+            print(colors.BOLDYELLOW+"Intente nuevamente :)"+colors.RESET)
         if(opcion==0):
             break
         elif(opcion==1):
@@ -42,7 +45,7 @@ def ActivosCategoria():
 
 def MenuRepores():
     while True:
-        print("""
+        print(colors.BOLDYELLOW+"""
 
                                     MENU REPORTES
                                                 
@@ -53,12 +56,12 @@ def MenuRepores():
                                     5. LISTAR HISTORIAL DE MOV. DE ACTIVO
                                     6. REGRESAR AL MENU PRINCIPAL
 
-""")
+"""+colors.RESET)
         
         opcion = int(input("Ingrese la opcion deseada: "))
         if opcion not in [1,2,3,4,5,6]:
-            print("Opcion no existente!")
-            print("Intente nuevamente :)")
+            print(colors.BOLDYELLOW+"Opcion no existente!"+colors.RESET)
+            print(colors.BOLDYELLOW+"Intente nuevamente :)"+colors.RESET)
         if opcion==6:
             break
         elif(opcion==1):

@@ -28,7 +28,7 @@ asignaciones
 def update(id):
     while True:
 
-            print("""
+            print(colors.BOLDYELLOW+"""
         
             QUE INFORMACION DESEA EDITAR
         
@@ -49,8 +49,8 @@ def update(id):
             activos ={}
             opcion = int(input("Ingrese la opcion deseada: "))
             if opcion not in [1,2,3,5,4,5,6,7,8,9,10]:
-                print("Opcion no existente!")
-                print("Intente nuevamente :)")
+                print(colors.BOLDYELLOW+"Opcion no existente!")
+                print(colors.BOLDYELLOW+"Intente nuevamente :)")
                 update(id)
 
 

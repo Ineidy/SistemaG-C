@@ -5,6 +5,16 @@ from tabulate import tabulate
 from datetime import datetime
 import modules.movimientosActivos as mov 
 
+class colors:
+    RESET = '\033[0m'
+    BOLDYELLOW = '\033[1;33m'
+
+
+
+def obtenerAsignaId(id):
+    peticionAsigna = requests.get(f"http://154.38.171.54:5502/activos/{id}")
+    dataAsignaId= peticionAsigna.json()
+    return dataAsignaId
 
 def getAllDataActivos():
     peticionactivos = requests.get("http://154.38.171.54:5502/activos")
@@ -15,53 +25,189 @@ def getActivosId(id):
     peticion= requests.get(f"http://154.38.171.54:5502/activos/{id}")
     return[peticion.json()] if peticion.ok else []
 
+def deleteactivos(id):
+
+    activo_encontrado = getActivosId(id)
+    if not activo_encontrado:
+        return {"Mensaje": "Activo no encontrado"}
+
+    activo = activo_encontrado[0]
+
+
+    historial={
+        "NroId": input("Ingresa el NroId de este movimiento: "),
+        "Fecha":datetime.now().strftime("%Y-%d-%m"),
+        "tipoMov": "2",
+        "idRespMov": input("Ingrese el id de el responsable de el movimiento: ")
+    }
+    activo["historialActivos"].append(historial)
+
+    Activoactualizado = {**activo, "idEstado": "2"}
+    peticion = requests.put(f"http://154.38.171.54:5502/activos/{id}", data=json.dumps(Activoactualizado))
+    res = peticion.json()
+
+    if peticion.status_code == 200:
+        res["Mensaje"] = "Estado actualizado correctamente!"
+
+    else: 
+        res["Mensaje"] = "Error en la actualizacion del estado!"
+    return [res]
+
+    
 
 def cambiarEstadoa0(id):
-    estado = {}
-    activoexistente = getActivosId(id)
-    if activoexistente:
-        estado["idEstado"] = "0"
+    activo = getActivosId(id)
+    if not activo:
+        return{"mensaje": "Activo no encontrado"}
+    
+    activo = activo[0]
+
+    historial={
+        "NroId": input("Ingresa el NroId de este movimiento: "),
+        "Fecha":datetime.now().strftime("%Y-%d-%m"),
+        "tipoMov": "2",
+        "idRespMov": input("Ingrese el id de el responsable de el movimiento: ")
+    }
+    activo["historialActivos"].append(historial)
 
 
-    if not activoexistente:
-        return {"Mensaje": "Activo no encontrado"}
-    activoactualizado = {**activoexistente[0], **estado}
-    peticion = requests.put(f'http://154.38.171.54:5502/activos/{id}', data=json.dumps(activoactualizado, indent=4))
+    Activoactualizado = {**activo, "idEstado": "0"}
+    peticion = requests.put(f"http://154.38.171.54:5502/activos/{id}", data=json.dumps(Activoactualizado))
     res = peticion.json()
-    return print("ACTIVO RETORNADO CORRECTAMENTE")
+
+    if peticion.status_code == 200:
+        res["Mensaje"] = "Activo retornado correctamente!"
+
+    else: 
+        res["Mensaje"] = "Error en la retornar el activo!"
+    return [res]
 
 
 
 def cambiarEstadoa2(id):
-    estado = {}
-    activoexistente = getActivosId(id)
-    if activoexistente:
-        estado["idEstado"] = "2"
+    activo = getActivosId(id)
+    if not activo:
+        return{"mensaje": "Activo no encontrado"}
+    
+    activo = activo[0]
+
+    historial={
+        "NroId": input("Ingresa el NroId de este movimiento: "),
+        "Fecha":datetime.now().strftime("%Y-%d-%m"),
+        "tipoMov": "2",
+        "idRespMov": input("Ingrese el id de el responsable de el movimiento: ")
+    }
+    activo["historialActivos"].append(historial)
 
 
-    if not activoexistente:
-        return {"Mensaje": "Activo no encontrado"}
-    activoactualizado = {**activoexistente[0], **estado}
-    peticion = requests.put(f'http://154.38.171.54:5502/activos/{id}', data=json.dumps(activoactualizado, indent=4))
+    Activoactualizado = {**activo, "idEstado": "2"}
+    peticion = requests.put(f"http://154.38.171.54:5502/activos/{id}", data=json.dumps(Activoactualizado))
     res = peticion.json()
-    return print("ACTIVO DADO DE BAJA CORRECTAMENTE")
+
+    if peticion.status_code == 200:
+        res["Mensaje"] = "Activo retornado correctamente!"
+
+    else: 
+        res["Mensaje"] = "Error en la retornar el activo!"
+    return [res]
+
+
+
+def reasignar(id):
+
+    NroID = input("Ingrese el id de la asignacion: ")
+
+    fechaasig = input("Ingrese la fecha EN EL SIGUIENTE FORMATO (YYYY-DD-MM): ")
+    personaozona = input("Ingrese el TipoAsignacion (Persona) o (Zona): "),
+    asignadoa = input("Ingrese el id de la Persona o Zona a la que le ReAsignara el activo: ")
+    responsable = input("Ingrese el id del encargado del ReAsignamiento del activo: ")
+
+    nuevainfo ={
+        "NroAsignacion": NroID,
+        "FechaAsignación": fechaasig,
+        "TipoAsignacion": personaozona,
+        "AsignadoA": asignadoa
+    }
+
+    nuevohistorial ={
+                "NroId":NroID,
+                "FechaAsignacion": fechaasig,
+                "TipoMov": "4",
+                "idRespMov": responsable
+    }
+
+    activo = obtenerAsignaId(id)
+    if activo:
+        if activo.get("idEstado")== "3":
+            print(colors.BOLDYELLOW+"EL ACTIVO ESTA EN RAPARACION Y/O GARANTIA, NO PUEDE SER ASIGNADO"+colors.RESET)
+            return 
+
+        if activo.get("idEstado") == "2":
+            print(colors.BOLDYELLOW+"EL ACTIVO ESTA DE BAJA, NO PUEDE SER ASIGNADO"+colors.RESET)
+            return 
+        
+
+        if activo.get("idEstado") == "1":
+            True
+
+        asignaciones = activo.get("asignaciones", [])
+        asignaciones.append(nuevainfo)
+        activo["asignaciones"] = asignaciones
+
+
+
+        activoH = activo.get("historialActivos", [])
+        activoH.append(nuevohistorial)
+        activo["historialActivos"] = activoH
+
+
+
+
+        link =  f"http://154.38.171.54:5502/activos/{id}"
+        respuesta = requests.put(link, json=activo)
+        if respuesta.status_code == 200:
+            activo["idEstado"]="1"
+            True
+            requests.put(link, json=activo)
+            print(colors.BOLDYELLOW+"Activo ReAsignado correctamente"+colors.RESET)
+            return 
+        else: 
+            print(colors.BOLDYELLOW+"Error al ReAsignar el Activo"+colors.RESET)
+            return 
+    else: 
+        print(colors.BOLDYELLOW+"Activo no encontrado"+colors.RESET)
+        return 
+    
+
 
 
 
 def cambiarEstadoa3(id):
-    estado = {}
-    activoexistente = getActivosId(id)
-    if activoexistente:
-        estado["idEstado"] = "3"
+    activo = getActivosId(id)
+    if not activo:
+        return{"mensaje": "Activo no encontrado"}
+    
+    activo = activo[0]
+
+    historial={
+        "NroId": input("Ingresa el NroId de este movimiento: "),
+        "Fecha":datetime.now().strftime("%Y-%d-%m"),
+        "tipoMov": "3",
+        "idRespMov": input("Ingrese el id de el responsable de el movimiento: ")
+    }
+    activo["historialActivos"].append(historial)
 
 
-    if not activoexistente:
-        return {"Mensaje": "Activo no encontrado"}
-    activoactualizado = {**activoexistente[0], **estado}
-    peticion = requests.put(f'http://154.38.171.54:5502/activos/{id}', data=json.dumps(activoactualizado, indent=4))
+    Activoactualizado = {**activo, "idEstado": "3"}
+    peticion = requests.put(f"http://154.38.171.54:5502/activos/{id}", data=json.dumps(Activoactualizado))
     res = peticion.json()
-    return print("ACTIVO MANDADO A GARANTIA CORRECTAMENTE")
 
+    if peticion.status_code == 200:
+        res["Mensaje"] = "Activo retornado correctamente!"
+
+    else: 
+        res["Mensaje"] = "Error en la retornar el activo!"
+    return [res]
 
 
 
@@ -110,7 +256,7 @@ def postActivos():
             if not activos.get("EmpresaResponsable"):
                 activos["EmpresaResponsable"]=("Campuslands")
             if not activos.get("idMarca"):
-                print("""
+                print(colors.BOLDYELLOW+"""
                       
 
                       IDS DE LAS MARCAS
@@ -124,7 +270,7 @@ def postActivos():
                       6.LENOVO
                       7.HP
 
-""")
+"""+colors.RESET)
                 idmarca=input("Ingrese el id de la marca: ")
 
                 if(re.match(r'[0-9]+$', idmarca) is not None):
@@ -133,7 +279,7 @@ def postActivos():
                     raise Exception ("El id de la marca no cumple con los estandares requeridos")
                 
             if not activos.get("idCategoria"):
-                print("""
+                print(colors.BOLDYELLOW+"""
                       
 
                     IDS CATEGORIAS DE ACTIVOS
@@ -143,7 +289,7 @@ def postActivos():
                       3. JUEGO
 
 
-""")
+"""+colors.RESET)
                 idcategoria = input("Ingrese el id de la categoria: ")
 
                 if(re.match(r'[0-9]+$', idmarca) is not None):
@@ -151,7 +297,7 @@ def postActivos():
                 else:
                     raise Exception ("El id de la categoria no cumple con los estandares requeridos")
             if not activos.get("idTipo"):
-                print("""
+                print(colors.BOLDYELLOW+"""
                       
                     IDS TIPOS DE ACTIVO
                       
@@ -164,7 +310,7 @@ def postActivos():
                       7. TV
                       8. ARCADE
 
-""")
+"""+colors.RESET)
                 idtipo=input("Ingrese el id del tipo: ")
 
                 if(re.match(r'[0-9]+$', idtipo) is not None):
@@ -194,39 +340,11 @@ def postActivos():
 
 
 
-def deleteactivos(id):
-
-    activo_encontrado = getActivosId(id)
-    if not activo_encontrado:
-        return {"Mensaje": "Activo no encontrado"}
-
-    activo = activo_encontrado[0]
-
-
-    historial={
-        "NroId": 1,
-        "Fecha":datetime.now().strftime("%Y-%d-%m"),
-        "tipoMov": "2"
-    }
-    activo["historialActivos"].append(historial)
-
-    Activoactualizado = {**activo, "idEstado": "2"}
-    peticion = requests.put(f"http://154.38.171.54:5502/activos/{id}", data=json.dumps(Activoactualizado))
-    res = peticion.json()
-
-    if peticion.status_code == 200:
-        res["Mensaje"] = "Estado actualizado correctamente!"
-
-    else: 
-        res["Mensaje"] = "Error en la actualizacion del estado!"
-    return [res]
-
-    
 
 
 def menuActivos():
     while True: 
-        print("""
+        print(colors.BOLDYELLOW+"""
             
 
 
@@ -241,16 +359,16 @@ def menuActivos():
         5. REGRESAR AL MENU PRINCIPAL
             
 
-""")
+"""+colors.RESET)
         opcion = int(input("Ingrese una opcion: "))
         if opcion not in [1,2,3,4,5]:
-            print("Opcion no existente!")
-            print("Intenta nuevamente :)")
+            print(colors.BOLDYELLOW+"Opcion no existente!"+colors.RESET)
+            print(colors.BOLDYELLOW+"Intenta nuevamente :)"+colors.RESET)
         elif(opcion==5):
             break
         elif(opcion==1):
             print(tabulate(postActivos(), headers="keys", tablefmt='rounded_grid'))
-            print("Activo guardado correctamente!")
+            print(colors.BOLDYELLOW+"Activo guardado correctamente!"+colors.RESET)
         elif(opcion==2):
             id = input("Ingrese el id de el activo que desea actualizar: ")
             print(tabulate(update(id), headers="keys", tablefmt='rounded_grid'))
@@ -503,7 +621,7 @@ def getAllActivosIdMarca(idmarca):
 
 def menubuscar():
     while True:
-        print("""
+        print(colors.BOLDYELLOW+"""
 
 
                         MENU DE BUSQUEDAS DE ACTIVOS
@@ -521,12 +639,12 @@ def menubuscar():
                         0. SALIR
                                         
 
-""")
+"""+colors.RESET)
         
         opcion = int(input("Ingrese la opcion que desea filtrar: "))
         if opcion not in [1,2,3,4,5,6,7,8,9,10,0]:
-            print("Opcion no existente!")
-            print("Intenta nuevamente :)")
+            print(colors.BOLDYELLOW+"Opcion no existente!")
+            print(colors.BOLDYELLOW+"Intenta nuevamente :)")
             menubuscar()
 
         if(opcion==0):
@@ -564,7 +682,7 @@ def menubuscar():
 def update(id):
     while True:
 
-        print("""
+        print(colors.BOLDYELLOW+"""
     
         QUE INFORMACION DESEA EDITAR
     
@@ -580,13 +698,13 @@ def update(id):
         0. Salir
 
 
-""")
+"""+colors.RESET)
         
         activos = {}
         opcion = int(input("Ingrese la opcion deseada: "))
         if opcion not in [1,2,3,5,4,5,6,7,8,9,0]:
-            print("Opcion no existente!")
-            print("Intente nuevamente :)")
+            print(colors.BOLDYELLOW+"Opcion no existente!")
+            print(colors.BOLDYELLOW+"Intente nuevamente :)")
             update(id)
 
         if opcion==1:
@@ -605,7 +723,7 @@ def update(id):
                 nombreActivo = input("Ingrese el nombre del activo: ")
                 activos["Nombre"]=nombreActivo
         if opcion == 6: 
-                print("""
+                print(colors.BOLDYELLOW+"""
                       
 
                       IDS DE LAS MARCAS
@@ -619,11 +737,11 @@ def update(id):
                       6.LENOVO
                       7.HP
 
-""")
+"""+colors.RESET)
                 idmarca=input("Ingrese el id de la marca: ")
                 activos["idMarca"] = idmarca
         if opcion == 7:
-                print("""
+                print(colors.BOLDYELLOW+"""
                       
 
                     IDS CATEGORIAS DE ACTIVOS
@@ -633,11 +751,11 @@ def update(id):
                       3. JUEGO
 
 
-""")
+"""+colors.RESET)
                 idcategoria = input("Ingrese el id de la categoria: ")
                 activos["idCategoria"]=idcategoria
         if opcion ==8:
-                print("""
+                print(colors.BOLDYELLOW+"""
                       
                     IDS TIPOS DE ACTIVO
                       
@@ -650,7 +768,7 @@ def update(id):
                       7. TV
                       8. ARCADE
 
-""")
+"""+colors.RESET)
                 idtipo = input("Ingrese el id del tipo: ")
                 activos["idTipo"]=idtipo
         if opcion == 9:

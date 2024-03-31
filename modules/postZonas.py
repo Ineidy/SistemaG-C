@@ -5,6 +5,10 @@ from tabulate import tabulate
 import modules.postAsignaciones as asigna
 
 
+class colors:
+    RESET = '\033[0m'
+    BOLDYELLOW = '\033[1;33m'
+
 def getDataZonas():
     peticion = requests.get("http://154.38.171.54:5502/zonas")
     data = peticion.json()
@@ -92,12 +96,12 @@ def updatezonas(id):
 def deleteZonas(id):
             peticion = requests.delete(f"http://154.38.171.54:5502/zonas/{id}")
             if peticion.status_code == 200:
-                print("Zona Eliminada") 
+                print(colors.BOLDYELLOW+"Zona Eliminada") 
                 return True
 
 def menuzonas():
     while True:
-        print("""
+        print(colors.BOLDYELLOW+"""
 
 
 
@@ -111,17 +115,17 @@ def menuzonas():
                     4. BUSCAR
                     5. REGRESAR AL MENU PRINCIPAL
 
-""")
+"""+colors.RESET)
         opcion = int(input("Ingrese una opcion: "))
         if opcion not in [1,2,3,4,5]:
-            print("Opcion no existente!")
-            print("Intenta nuevamente :)")
+            print(colors.BOLDYELLOW+"Opcion no existente!"+colors.RESET)
+            print(colors.BOLDYELLOW+"Intenta nuevamente :)"+colors.RESET)
             menuzonas()
         if(opcion==5):
             break
         elif(opcion==1):
             print(tabulate(postZonas(), headers="keys", tablefmt='rounded_grid'))
-            print("Zona Guardada Correctamente!")
+            print(colors.BOLDYELLOW+"Zona Guardada Correctamente!"+colors.RESET)
         elif(opcion==3):
             id = input("Ingrese el id de la zona que desea eliminar: ")
             print(deleteZonas(id))
@@ -170,7 +174,7 @@ def getAllZonasCapacidad(totalCapacidad):
 
 def menubusquedazonas():
     while True:
-        print("""
+        print(colors.BOLDYELLOW+"""
 
 
 
@@ -181,11 +185,11 @@ def menubusquedazonas():
         3. BUSCAR POR LA CAPACIDAD DE LA ZONA
         4. SALIR AL MENU DE ZONAS
               
-""")
+"""+colors.RESET)
         opcion = int(input("Seleccione una opcion: "))
         if opcion not in [1,2,3,4]:
-            print("Opcion no existente!")
-            print("Intenta nuevamente :)")
+            print(colors.BOLDYELLOW+"Opcion no existente!"+colors.RESET)
+            print(colors.BOLDYELLOW+"Intenta nuevamente :)"+colors.RESET)
             menubusquedazonas()
 
         if(opcion==1):

@@ -6,6 +6,9 @@ from tabulate import tabulate
 import modules.postActivos as activ
 
 
+class colors:
+    RESET = '\033[0m'
+    BOLDYELLOW = '\033[1;33m'
 
 
 
@@ -62,17 +65,17 @@ def deletePersonas(id):
                     break
 
         if asignacionesactivos:
-            print("NO SE PUEDE ELIMINAR UNA PERSONA QUE TENGA ACTIVOS ASIGNADOS")
+            print(colors.BOLDYELLOW+"NO SE PUEDE ELIMINAR UNA PERSONA QUE TENGA ACTIVOS ASIGNADOS"+colors.RESET)
             menuPersonal()
         
 
         peticion = requests.delete(f"http://154.38.171.54:5502/personas/{id}")
         if peticion.status_code == 200:
-            print("Persona Eliminada")
+            print(colors.BOLDYELLOW+"Persona Eliminada"+colors.RESET)
 
 def menuactualizar(id):
     while True:
-        print("""
+        print(colors.BOLDYELLOW+"""
               
 
                         QUE INFORMACION DESEA EDITAR
@@ -85,13 +88,13 @@ def menuactualizar(id):
 
 
 
-""")
+"""+colors.RESET)
 
         personas ={}
         opcion= int(input("Ingrese la opcion deseada: "))
         if opcion not in [1,2,3,5,4]:
-            print("Opcion no existente!")
-            print("Intente nuevamente :)")
+            print(colors.BOLDYELLOW+"Opcion no existente!"+colors.RESET)
+            print(colors.BOLDYELLOW+"Intente nuevamente :)"+colors.RESET)
             menuactualizar()
         if(opcion==1):
             nroId = input("ingrese el nuevo numero de identificacion: ")
@@ -124,7 +127,7 @@ def menuactualizar(id):
 
 def menuPersonal():
     while True:
-        print("""
+        print(colors.BOLDYELLOW+"""
               
 
 
@@ -139,11 +142,11 @@ def menuPersonal():
         5. REGRESAR AL MENU PRINCIPAL
               
 
-""")
+"""+colors.RESET)
         opcion = int(input("Ingrese una opcion: "))
         if opcion not in [1,2,3,4,5]:
-            print("Opcion no existente!")
-            print("Intenta nuevamente :)")
+            print(colors.BOLDYELLOW+"Opcion no existente!"+colors.RESET)
+            print(colors.BOLDYELLOW+"Intenta nuevamente :)"+colors.RESET)
         elif(opcion==5):
             break
         elif(opcion==1):
@@ -212,7 +215,7 @@ def getBuscarEmail(email):
 
 def menuBusqueda():
     while True:
-        print("""
+        print(colors.BOLDYELLOW+"""
               
 
 
@@ -226,10 +229,10 @@ def menuBusqueda():
             0. SALIR
 
 
-""")
+"""+colors.RESET)
         opcion = int(input("Ingrese la opcion que desea filtrar: "))
         if opcion not in [1,2,3,4,0]:
-            print("Intenta nuevamente :)")
+            print(colors.BOLDYELLOW+"Intenta nuevamente :)"+colors.RESET)
             menuBusqueda()
         elif(opcion==0):
             break

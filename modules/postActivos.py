@@ -15,6 +15,56 @@ def getActivosId(id):
     peticion= requests.get(f"http://154.38.171.54:5502/activos/{id}")
     return[peticion.json()] if peticion.ok else []
 
+
+def cambiarEstadoa0(id):
+    estado = {}
+    activoexistente = getActivosId(id)
+    if activoexistente:
+        estado["idEstado"] = "0"
+
+
+    if not activoexistente:
+        return {"Mensaje": "Activo no encontrado"}
+    activoactualizado = {**activoexistente[0], **estado}
+    peticion = requests.put(f'http://154.38.171.54:5502/activos/{id}', data=json.dumps(activoactualizado, indent=4))
+    res = peticion.json()
+    return print("ACTIVO RETORNADO CORRECTAMENTE")
+
+
+
+def cambiarEstadoa2(id):
+    estado = {}
+    activoexistente = getActivosId(id)
+    if activoexistente:
+        estado["idEstado"] = "2"
+
+
+    if not activoexistente:
+        return {"Mensaje": "Activo no encontrado"}
+    activoactualizado = {**activoexistente[0], **estado}
+    peticion = requests.put(f'http://154.38.171.54:5502/activos/{id}', data=json.dumps(activoactualizado, indent=4))
+    res = peticion.json()
+    return print("ACTIVO DADO DE BAJA CORRECTAMENTE")
+
+
+
+def cambiarEstadoa3(id):
+    estado = {}
+    activoexistente = getActivosId(id)
+    if activoexistente:
+        estado["idEstado"] = "3"
+
+
+    if not activoexistente:
+        return {"Mensaje": "Activo no encontrado"}
+    activoactualizado = {**activoexistente[0], **estado}
+    peticion = requests.put(f'http://154.38.171.54:5502/activos/{id}', data=json.dumps(activoactualizado, indent=4))
+    res = peticion.json()
+    return print("ACTIVO MANDADO A GARANTIA CORRECTAMENTE")
+
+
+
+
 def postActivos():
 
     while True:

@@ -59,6 +59,6 @@ if(__name__=='__main__'):
         elif(opcion==5):
             postreportes.MenuRepores()
         elif(opcion==6):
-            movimientos.menuMovimientosActivos()
+            movimientos.menuMoviActivos()
         elif(opcion==7):
             break

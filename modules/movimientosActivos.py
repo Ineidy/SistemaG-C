@@ -1,6 +1,7 @@
 import modules.postActivos as activ
 import requests
 import json
+from tabulate import tabulate
 
 
 def menuMoviActivos():
@@ -18,13 +19,20 @@ def menuMoviActivos():
 
 """)
         
-        opcion = input("Ingrese la opcion deseada: ")
+        opcion = int(input("Ingrese la opcion deseada: "))
         if opcion not in [1,2,3,4,5]:
             print("opcion no encontrada")
             print("Intente nuevamente :)")
             menuMoviActivos()
         if opcion==5:
             break
-        
-
+        elif opcion == 1:
+            id = input("Ingrese el id del activo que desea restaurar: ")
+            print(tabulate(activ.cambiarEstadoa0(id), headers="keys", tablefmt='rounded_grid'))
+        elif opcion==2:
+            id = input("Ingrese el id del activo que desea dar de baja: ")
+            print(tabulate(activ.cambiarEstadoa2(id), headers="keys", tablefmt='rounded_grid'))
+        elif opcion ==4:
+            id = input("Ingrese el id del activo que desea mandar a garantia: ")
+            print(tabulate(activ.cambiarEstadoa3(id), headers="keys", tablefmt='rounded_grid'))
 

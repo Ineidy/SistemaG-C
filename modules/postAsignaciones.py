@@ -31,17 +31,23 @@ def MenuTipoAsigna():
                             2. ZONA
                             0. SALIR
 
+        -SI QUIERE SALIR DE UNA OPCION QUE SELECCIONO, PRESIONE CTROL + C PARA CANCELAR OPCION
+
 """+colors.RESET)
-        opcion = int(input("Ingrese la opcion deseada: "))
-        if opcion not in [1,2,0]:
-            print(colors.BOLDYELLOW+"Opcion no existente!"+colors.RESET)
-            print(colors.BOLDYELLOW+"Intente nuevamente :)"+colors.RESET)
-        if(opcion==0):
-            break
-        elif(opcion==1):
-            postAsignacionesPersona()
-        elif(opcion==2):
-            postAsignacionesZonas()
+        try:
+
+            opcion = int(input("Ingrese la opcion deseada: "))
+            if opcion not in [1,2,0]:
+                print(colors.BOLDYELLOW+"Opcion no existente!"+colors.RESET)
+                print(colors.BOLDYELLOW+"Intente nuevamente :)"+colors.RESET)
+            if(opcion==0):
+                break
+            elif(opcion==1):
+                postAsignacionesPersona()
+            elif(opcion==2):
+                postAsignacionesZonas()
+        except KeyboardInterrupt:
+            return menuAsignacionActivos()
 
 
 
@@ -180,25 +186,32 @@ def menuAsignacionActivos():
               
 
 
-        MENU ASIGNACION DE ACTIVOS
-              
+                            MENU ASIGNACION DE ACTIVOS
+                                
 
-        1. CREAR ASIGNACION
-        2. BUSCAR ASIGNACION
-        3. REGRESAR AL MENU PRINCIPAL
+                            1. CREAR ASIGNACION
+                            2. BUSCAR ASIGNACION
+                            3. REGRESAR AL MENU PRINCIPAL
+
+
+        -SI QUIERE SALIR DE UNA OPCION QUE SELECCIONO, PRESIONE CTROL + C PARA CANCELAR OPCION
 
 """+colors.RESET)
-        opcion = int(input("Ingrese una opcion: "))
-        if opcion not in [1,2,3]:
-            print(colors.BOLDYELLOW+"Opcion no existente!"+colors.RESET)
-            print(colors.BOLDYELLOW+"Intente nuevamente :)"+colors.RESET)
-        if(opcion==3):
-            break
-        elif(opcion==1):
-            menupersonasOzonas()
-        elif(opcion==2):
-            id = input("Ingresa el id de del activo del que desea buscar asignaciones")
-            print(tabulate(getAllAsignaId(id), headers="keys", tablefmt='rounded_grid'))             
+        try: 
+            opcion = int(input("Ingrese una opcion: "))
+            if opcion not in [1,2,3]:
+                print(colors.BOLDYELLOW+"Opcion no existente!"+colors.RESET)
+                print(colors.BOLDYELLOW+"Intente nuevamente :)"+colors.RESET)
+            if(opcion==3):
+                break
+            elif(opcion==1):
+                menupersonasOzonas()
+            elif(opcion==2):
+                id = input("Ingresa el id de del activo del que desea buscar asignaciones")
+                print(tabulate(getAllAsignaId(id), headers="keys", tablefmt='rounded_grid'))             
+        except KeyboardInterrupt:
+            break    
+
 
 def getAllAsignaId(id):
     asignacionid = []
@@ -250,19 +263,24 @@ def menupersonasOzonas():
                                 2. ZONA
                                 0. SALIR
 
+        -SI QUIERE SALIR DE UNA OPCION QUE SELECCIONO, PRESIONE CTROL + C PARA CANCELAR OPCION
+
 """+colors.RESET)
-        opcion=int(input("Ingrese la opcion que desea: "))
-        if opcion not in [1,2,0]:
-            print(colors.BOLDYELLOW+"Opcion no existente!"+colors.RESET)
-            print(colors.BOLDYELLOW+"Intente nuevamente :)"+colors.RESET)
-        if(opcion==1):
-            idactivo = input("Ingrese el id del activo al que desea agregarle la asignacion: ")
-            postAsignacionesPersona(idactivo)
-        elif(opcion==2):
-            idactivo = input("Ingrese el id del activo al que desea agregarle la asignacion: ")
-            postAsignacionesZonas(idactivo)
-        elif(opcion==0):
-             break
+        try: 
+            opcion=int(input("Ingrese la opcion que desea: "))
+            if opcion not in [1,2,0]:
+                print(colors.BOLDYELLOW+"Opcion no existente!"+colors.RESET)
+                print(colors.BOLDYELLOW+"Intente nuevamente :)"+colors.RESET)
+            if(opcion==1):
+                idactivo = input("Ingrese el id del activo al que desea agregarle la asignacion: ")
+                postAsignacionesPersona(idactivo)
+            elif(opcion==2):
+                idactivo = input("Ingrese el id del activo al que desea agregarle la asignacion: ")
+                postAsignacionesZonas(idactivo)
+            elif(opcion==0):
+                break
+        except KeyboardInterrupt:
+            return menuAsignacionActivos()
 
 
 

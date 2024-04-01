@@ -3,7 +3,7 @@ import json
 import re
 from tabulate import tabulate
 import modules.postAsignaciones as asigna
-
+import os
 
 class colors:
     RESET = '\033[0m'
@@ -48,7 +48,8 @@ def postZonas():
                 else:
                     raise Exception ("La capacidad total no cumple con los estandares establecidos")
 
-
+        except KeyboardInterrupt:
+            return menuzonas()
         except Exception as error:
             print(error)
 
@@ -62,6 +63,7 @@ def postZonas():
 def updatezonas(id):
     zonas = {}
     while True:
+
         try: 
             if not zonas.get("nombreZona"):
                 namezona = input("Ingrese el nuevo nombre de la zona: ")
@@ -74,33 +76,38 @@ def updatezonas(id):
                 else: 
                     raise Exception ("La nueva capacidad total, no cumple con los estandares")
 
+        except KeyboardInterrupt:
+            return menuzonas()
         except Exception as error:
             print(error)
-    
-        zonaexistente = getDataZonas()
-        if not zonaexistente:
-            return {"Mensaje": "Zona no encontrada"}
-        
+
         zonaactualizada = {**zonaexistente[0], **zonas}
         peticion = requests.put(f'http://154.38.171.54:5502/zonas/{id}', data=json.dumps(zonaactualizada))
         res = peticion.json()
 
         if peticion.status_code == 200:
             res["Mensaje"] = "Zona actualizada correctamente"
+
         else:
             res["Mensaje"] = "Error al actualizar zona"
+
 
         return[res]
 
 
 def deleteZonas(id):
+    try:
             peticion = requests.delete(f"http://154.38.171.54:5502/zonas/{id}")
             if peticion.status_code == 200:
                 print(colors.BOLDYELLOW+"Zona Eliminada") 
                 return True
+    except KeyboardInterrupt:
+        return menuzonas()
 
 def menuzonas():
+
     while True:
+
         print(colors.BOLDYELLOW+"""
 
 
@@ -115,25 +122,31 @@ def menuzonas():
                     4. BUSCAR
                     5. REGRESAR AL MENU PRINCIPAL
 
+        -SI QUIERE SALIR DE UNA OPCION QUE SELECCIONO, PRESIONE CTROL + C PARA CANCELAR OPCION
+
 """+colors.RESET)
-        opcion = int(input("Ingrese una opcion: "))
-        if opcion not in [1,2,3,4,5]:
-            print(colors.BOLDYELLOW+"Opcion no existente!"+colors.RESET)
-            print(colors.BOLDYELLOW+"Intenta nuevamente :)"+colors.RESET)
-            menuzonas()
-        if(opcion==5):
+        try: 
+            opcion = input("Ingrese una opcion: ")
+            if re.match(r'^[1-7]$', opcion) is not None:
+                opcion = int(opcion)
+            if(opcion==5):
+                break
+            elif(opcion==1):
+                print(tabulate(postZonas(), headers="keys", tablefmt='rounded_grid'))
+                print(colors.BOLDYELLOW+"Zona Guardada Correctamente!"+colors.RESET)
+
+            elif(opcion==3):
+                id = input("Ingrese el id de la zona que desea eliminar: ")
+                print(deleteZonas(id))
+
+            elif(opcion==2):
+                id = input("Ingrese el id de la zona que desea actualizar: ")
+                print(tabulate(updatezonas(id), headers="keys", tablefmt='rounded_grid'))
+
+            elif(opcion==4):
+                menubusquedazonas()
+        except KeyboardInterrupt:
             break
-        elif(opcion==1):
-            print(tabulate(postZonas(), headers="keys", tablefmt='rounded_grid'))
-            print(colors.BOLDYELLOW+"Zona Guardada Correctamente!"+colors.RESET)
-        elif(opcion==3):
-            id = input("Ingrese el id de la zona que desea eliminar: ")
-            print(deleteZonas(id))
-        elif(opcion==2):
-            id = input("Ingrese el id de la zona que desea actualizar: ")
-            print(tabulate(updatezonas(id), headers="keys", tablefmt='rounded_grid'))
-        elif(opcion==4):
-            menubusquedazonas()
 
 
 def getAllZonasId(id):
@@ -174,32 +187,40 @@ def getAllZonasCapacidad(totalCapacidad):
 
 def menubusquedazonas():
     while True:
+        os.system("clear")
         print(colors.BOLDYELLOW+"""
 
 
 
-        MENU DE BUSQUEDA DE ZONAS
-              
-        1. BUSCAR POR EL ID
-        2. BUSCAR POR EL NOMBRE DE LA ZONA
-        3. BUSCAR POR LA CAPACIDAD DE LA ZONA
-        4. SALIR AL MENU DE ZONAS
+                    MENU DE BUSQUEDA DE ZONAS
+                        
+
+                    1. BUSCAR POR EL ID
+                    2. BUSCAR POR EL NOMBRE DE LA ZONA
+                    3. BUSCAR POR LA CAPACIDAD DE LA ZONA
+                    4. SALIR AL MENU DE ZONAS
+
+        -SI QUIERE SALIR DE UNA OPCION QUE SELECCIONO, PRESIONE CTROL + C PARA CANCELAR OPCION
+
               
 """+colors.RESET)
-        opcion = int(input("Seleccione una opcion: "))
-        if opcion not in [1,2,3,4]:
-            print(colors.BOLDYELLOW+"Opcion no existente!"+colors.RESET)
-            print(colors.BOLDYELLOW+"Intenta nuevamente :)"+colors.RESET)
-            menubusquedazonas()
-
-        if(opcion==1):
-            id = input("Ingrese el id de la zona que desea buscar: ")
-            print(tabulate(getAllZonasId(id), headers="keys", tablefmt='rounded_grid'))
-        elif(opcion==2):
-            nombreZona = input("Ingrese el nombre de la zona que desea buscar: ")
-            print(tabulate(getAllZonasNombre(nombreZona), headers="keys", tablefmt='rounded_grid'))
-        elif(opcion==3):
-            totalCapacidad = int(input("Ingresa La capacidad total de la zona que deseas buscar: "))
-            print(tabulate(getAllZonasCapacidad(totalCapacidad), headers="keys", tablefmt='rounded_grid'))
-        elif(opcion==4):
-            break
+        try: 
+            opcion = input("Ingrese una opcion: ")
+            if re.match(r'^[1-7]$', opcion) is not None:
+                opcion = int(opcion)
+            if(opcion==1):
+                id = input("Ingrese el id de la zona que desea buscar: ")
+                print(tabulate(getAllZonasId(id), headers="keys", tablefmt='rounded_grid'))
+                print("Oprima una tecla para continuar...")
+            elif(opcion==2):
+                nombreZona = input("Ingrese el nombre de la zona que desea buscar: ")
+                print(tabulate(getAllZonasNombre(nombreZona), headers="keys", tablefmt='rounded_grid'))
+                print("Oprima una tecla para continuar...")
+            elif(opcion==3):
+                totalCapacidad = int(input("Ingresa La capacidad total de la zona que deseas buscar: "))
+                print(tabulate(getAllZonasCapacidad(totalCapacidad), headers="keys", tablefmt='rounded_grid'))
+                print("Oprima una tecla para continuar...")
+            elif(opcion==4):
+                break
+        except KeyboardInterrupt:
+            return menuzonas()

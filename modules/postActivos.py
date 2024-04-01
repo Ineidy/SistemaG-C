@@ -118,7 +118,7 @@ def reasignar(id):
 
     NroID = input("Ingrese el id de la asignacion: ")
 
-    fechaasig = input("Ingrese la fecha EN EL SIGUIENTE FORMATO (YYYY-DD-MM): ")
+    fechaasig = datetime.now().strftime("%Y-%d-%m"),
     personaozona = input("Ingrese el TipoAsignacion (Persona) o (Zona): "),
     asignadoa = input("Ingrese el id de la Persona o Zona a la que le ReAsignara el activo: ")
     responsable = input("Ingrese el id del encargado del ReAsignamiento del activo: ")
@@ -347,42 +347,44 @@ def postActivos():
 
 def menuActivos():
     while True:
-        print(colors.BOLDYELLOW+"""
-            
+        try:
+            print(colors.BOLDYELLOW+"""
+                
 
 
 
-                        MENU ACTIVOS
-                            
+                            MENU ACTIVOS
+                                
 
-                        1. AGREGAR
-                        2. EDITAR
-                        3. ELIMINAR
-                        4. BUSCAR
-                        5. REGRESAR AL MENU PRINCIPAL
+                            1. AGREGAR
+                            2. EDITAR
+                            3. ELIMINAR
+                            4. BUSCAR
+                            5. REGRESAR AL MENU PRINCIPAL
 
 
 """+colors.RESET)
-    # try:
-        opcion = input("Ingrese una opcion: ")
-        if re.match(r'^[1-5]$', opcion) is not None:
-            opcion = int(opcion)
+        
 
-        if(opcion==5):
+            opcion = input("Ingrese una opcion: ")
+            if re.match(r'^[1-5]$', opcion) is not None:
+                opcion = int(opcion)
+
+            if(opcion==5):
+                break
+            elif(opcion==1):
+                print(tabulate(postActivos(), headers="keys", tablefmt='rounded_grid'))
+                print(colors.BOLDYELLOW+"Activo guardado correctamente!"+colors.RESET)
+            elif(opcion==2):
+                id = input("Ingrese el id de el activo que desea actualizar: ")
+                print(tabulate(update(id), headers="keys", tablefmt='rounded_grid'))
+            elif(opcion==3):
+                id = input("Ingrese el id del activo al que desea eliminar el estado: ")
+                print(tabulate(deleteactivos(id), headers="keys", tablefmt='rounded_grid'))
+            elif(opcion==4):
+                print(tabulate(menubuscar(), headers="keys", tablefmt='rounded_grid'))
+        except KeyboardInterrupt:
             break
-        elif(opcion==1):
-            print(tabulate(postActivos(), headers="keys", tablefmt='rounded_grid'))
-            print(colors.BOLDYELLOW+"Activo guardado correctamente!"+colors.RESET)
-        elif(opcion==2):
-            id = input("Ingrese el id de el activo que desea actualizar: ")
-            print(tabulate(update(id), headers="keys", tablefmt='rounded_grid'))
-        elif(opcion==3):
-            id = input("Ingrese el id del activo al que desea eliminar el estado: ")
-            print(tabulate(deleteactivos(id), headers="keys", tablefmt='rounded_grid'))
-        elif(opcion==4):
-            print(tabulate(menubuscar(), headers="keys", tablefmt='rounded_grid'))
-    # except KeyboardInterrupt:
-    #     break
 
 def getAllActivos():
     activos = []
@@ -688,26 +690,26 @@ def menubuscar():
 
 def update(id):
     while True:
+        try:
+            print(colors.BOLDYELLOW+"""
+        
+                        QUE INFORMACION DESEA EDITAR
+                    
+                        1. NroItem
+                        2. NroSerial
+                        3. CodCampus
+                        4. NroFormulario
+                        5. Nombre
+                        6. idMarca
+                        7. idCategoria
+                        8. idTipo
+                        9. ValorUnitario
+                        0. Salir
 
-        print(colors.BOLDYELLOW+"""
-    
-                    QUE INFORMACION DESEA EDITAR
-                
-                    1. NroItem
-                    2. NroSerial
-                    3. CodCampus
-                    4. NroFormulario
-                    5. Nombre
-                    6. idMarca
-                    7. idCategoria
-                    8. idTipo
-                    9. ValorUnitario
-                    0. Salir
+            -PRESIONE CTRL + C PARA SALIR
 
-        -PRESIONE CTRL + C PARA SALIR
-
-"""+colors.RESET)
-        try: 
+    """+colors.RESET)
+         
         
             activos = {}
             
@@ -792,17 +794,12 @@ def update(id):
             return menuActivos()
 
 
-
-
-
-
-
-            activoexistente = getActivosId(id)
-            if not activoexistente:
-                return {"Mensaje": "Activo no encontrado"}
-            activoactualizado = {**activoexistente[0], **activos}
-            peticion = requests.put(f'http://154.38.171.54:5502/activos/{id}', data=json.dumps(activoactualizado, indent=4))
-            res = peticion.json()
-            tablaactualuzar = [activos]
-            return 
-            
+        activoexistente = getActivosId(id)
+        if not activoexistente:
+            return {"Mensaje": "Activo no encontrado"}
+        activoactualizado = {**activoexistente[0], **activos}
+        peticion = requests.put(f'http://154.38.171.54:5502/activos/{id}', data=json.dumps(activoactualizado, indent=4))
+        res = peticion.json()
+        tablaactualuzar = [activos]
+        return 
+        

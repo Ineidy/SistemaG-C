@@ -54,7 +54,7 @@ def MenuTipoAsigna():
 def postAsignacionesPersona(idactivo):
 
     NroID = input("Ingrese el id de la asignacion: ")
-    fechaasig = input("Ingrese la fecha EN EL SIGUIENTE FORMATO (YYYY-DD-MM): ")
+    fechaasig = datetime.now().strftime("%Y-%d-%m"),
     asignadoa = input("Ingrese el id de la zona a la que le asignara el activo: ")
     responsable = input("Ingrese el id del encargado del movimiento del activo: ")
 
@@ -119,7 +119,7 @@ def postAsignacionesPersona(idactivo):
 def postAsignacionesZonas(idactivo):
 
     NroID = input("Ingrese el id de la asignacion: ")
-    fechaasig = input("Ingrese la fecha EN EL SIGUIENTE FORMATO (YYYY-DD-MM): ")
+    fechaasig = datetime.now().strftime("%Y-%d-%m"),
     asignadoa = input("Ingrese el id de la zona a la que le asignara el activo: ")
     responsable = input("Ingrese el id del encargado del movimiento del activo: ")
 

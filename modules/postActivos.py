@@ -27,44 +27,53 @@ def getActivosId(id):
     return[peticion.json()] if peticion.ok else []
 
 def deleteactivos(id):
+    try: 
+        activo_encontrado = getActivosId(id)
+        if not activo_encontrado:
+            return {"Mensaje": "Activo no encontrado"}
 
-    activo_encontrado = getActivosId(id)
-    if not activo_encontrado:
-        return {"Mensaje": "Activo no encontrado"}
-
-    activo = activo_encontrado[0]
+        activo = activo_encontrado[0]
 
 
-    historial={
-        "NroId": input("Ingresa el NroId de este movimiento: "),
-        "Fecha":datetime.now().strftime("%Y-%d-%m"),
-        "tipoMov": "2",
-        "idRespMov": input("Ingrese el id de el responsable de el movimiento: ")
-    }
-    activo["historialActivos"].append(historial)
+        historial={
+            "NroId": input("Ingresa el NroId de este movimiento: "),
+            "Fecha":datetime.now().strftime("%Y-%d-%m"),
+            "tipoMov": "2",
+            "idRespMov": input("Ingrese el id de el responsable de el movimiento: ")
+        }
+        activo["historialActivos"].append(historial)
 
-    Activoactualizado = {**activo, "idEstado": "2"}
-    peticion = requests.put(f"http://154.38.171.54:5502/activos/{id}", data=json.dumps(Activoactualizado))
-    res = peticion.json()
+        Activoactualizado = {**activo, "idEstado": "2"}
+        peticion = requests.put(f"http://154.38.171.54:5502/activos/{id}", data=json.dumps(Activoactualizado))
+        res = peticion.json()
 
-    if peticion.status_code == 200:
-        res["Mensaje"] = "Estado actualizado correctamente!"
+        if peticion.status_code == 200:
+            res["Mensaje"] = "Estado actualizado correctamente!"
 
-    else: 
-        res["Mensaje"] = "Error en la actualizacion del estado!"
-    return [res]
-
+        else: 
+            res["Mensaje"] = "Error en la actualizacion del estado!"
+        return [res]
+     
+    except KeyboardInterrupt:
+        return menuActivos()
     
 
 def cambiarEstadoa0(id):
     activo = getActivosId(id)
+    
+
+
+
     if not activo:
         return{"mensaje": "Activo no encontrado"}
-    
+    if activo.get["idEstado"] == "2":
+        print("ACTIVO DADO DE BAJA, NO SE PUEDE RETORNAR ")
+        False
+
     activo = activo[0]
 
     historial={
-        "NroId": input("Ingresa el NroId de este movimiento: "),
+        "NroId": (id),
         "Fecha":datetime.now().strftime("%Y-%d-%m"),
         "tipoMov": "2",
         "idRespMov": input("Ingrese el id de el responsable de el movimiento: ")
@@ -93,7 +102,7 @@ def cambiarEstadoa2(id):
     activo = activo[0]
 
     historial={
-        "NroId": input("Ingresa el NroId de este movimiento: "),
+        "NroId": (id),
         "Fecha":datetime.now().strftime("%Y-%d-%m"),
         "tipoMov": "2",
         "idRespMov": input("Ingrese el id de el responsable de el movimiento: ")
@@ -192,7 +201,7 @@ def cambiarEstadoa3(id):
         activo = activo[0]
 
         historial={
-            "NroId": input("Ingresa el NroId de este movimiento: "),
+            "NroId": (id),
             "Fecha":datetime.now().strftime("%Y-%d-%m"),
             "tipoMov": "3",
             "idRespMov": input("Ingrese el id de el responsable de el movimiento: ")
@@ -220,12 +229,11 @@ def postActivos():
 
             if not activos.get("NroItem"):
                 nmeroitem = input("Ingrese el numero de item (SOLO NUMEROS): ")
-                if(re.match(r"^[0-9]$", nmeroitem)):
+                if(re.match(r"[0-9]+$", nmeroitem)):
                     nmeroitem = int(nmeroitem)
                     activos["NroItem"] = nmeroitem
                 else: 
                     raise Exception("El NroItem no cumple con los requisitos establecidos ")
-                    return 
             if not activos.get("CodTransaccion"):
                 activos["CodTransaccion"]=int(327)
 
@@ -235,7 +243,6 @@ def postActivos():
                     activos["NroSerial"]=numeroserial
                 else:
                     raise Exception ("El numero del serial no cumple con los estandares requeridos")
-                    return menuActivos()
             if not activos.get("CodCampus"):
                 codigocampus = input("Ingrese el codigo de campus(5-10 CARACTERES ENTRE LETRAS MAYUSCULAS Y NUMEROS): ")
                 if(re.match(r"^[A-Z0-9-]{5,10}$", numeroserial)is not None):
@@ -690,8 +697,8 @@ def menubuscar():
 
 def update(id):
     while True:
-        try:
-            print(colors.BOLDYELLOW+"""
+
+        print(colors.BOLDYELLOW+"""
         
                         QUE INFORMACION DESEA EDITAR
                     
@@ -710,7 +717,7 @@ def update(id):
 
     """+colors.RESET)
          
-        
+        try:
             activos = {}
             
             opcion = input("Ingrese una opcion: ")
@@ -791,7 +798,7 @@ def update(id):
                 break
         
         except KeyboardInterrupt:
-            return menuActivos()
+            break
 
 
         activoexistente = getActivosId(id)

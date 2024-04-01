@@ -1,5 +1,6 @@
 import modules.postActivos as activ
 import requests
+import re
 import json
 from tabulate import tabulate
 import os
@@ -10,7 +11,6 @@ class colors:
 
 def menuMoviActivos():
     while True:
-        os.system("clear")
         print(colors.BOLDYELLOW+"""
 
                         MENU MOVIMIENTO DE ACTIVOS
@@ -23,25 +23,18 @@ def menuMoviActivos():
                         5. REGRESAR AL MENU PRINCIPAL
                 PRECIONE CTRL + C PARA SALIR DEL MENU PRINCIPAL
 """+colors.RESET)
-        try: 
-            opcion = input("Ingrese una opcion: ")
-            if re.match(r'^[1-5]$', opcion) is not None:
-                opcion = int(opcion)
-
-                menuMoviActivos()
-            if opcion==5:
-                break
-            elif opcion == 1:
-                id = input("Ingrese el id del activo que desea restaurar: ")
-                print(tabulate(activ.cambiarEstadoa0(id)))
-            elif opcion==2:
-                id = input("Ingrese el id del activo que desea dar de baja: ")
-                print(tabulate(activ.cambiarEstadoa2(id)))
-            elif opcion ==4:
-                id = input("Ingrese el id del activo que desea mandar a garantia: ")
-                print(tabulate(activ.cambiarEstadoa3(id)))
-            elif opcion ==3:
-                id = input("Ingrese el id del activo que desea reasignar: ")
-                print(tabulate(activ.reasignar(id)))
-        except KeyboardInterrupt:
+        opcion = int(input("Ingrese una opcion: "))
+        if opcion==5:
             break
+        elif opcion == 1:
+            id = input("Ingrese el id del activo que desea restaurar: ")
+            print(tabulate(activ.cambiarEstadoa0(id), headers="keys", tablefmt='rounded_grid'))
+        elif opcion==2:
+            id = input("Ingrese el id del activo que desea dar de baja: ")
+            print(tabulate(activ.cambiarEstadoa2(id), headers="keys", tablefmt='rounded_grid'))
+        elif opcion ==4:
+            id = input("Ingrese el id del activo que desea mandar a garantia: ")
+            print(tabulate(activ.cambiarEstadoa3(id), headers="keys", tablefmt='rounded_grid'))
+        elif opcion ==3:
+            id = input("Ingrese el id del activo que desea reasignar: ")
+            print(tabulate(activ.reasignar(id), headers="keys", tablefmt='rounded_grid'))

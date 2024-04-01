@@ -81,6 +81,10 @@ def updatezonas(id):
         except Exception as error:
             print(error)
 
+        zonaexistente = getDataZonas()
+        if not zonaexistente:
+            return {"Mensaje": "Zona no encontrada"}
+        
         zonaactualizada = {**zonaexistente[0], **zonas}
         peticion = requests.put(f'http://154.38.171.54:5502/zonas/{id}', data=json.dumps(zonaactualizada))
         res = peticion.json()

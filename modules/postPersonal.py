@@ -27,7 +27,16 @@ def postPersonal():
     identificacion = input("ingrese el id: ")
     while True:
         try:
-            persona = {
+            activo_encontrado = None
+            for val in getDataPersonas():
+                if val.get("id") == identificacion:
+                    activo_encontrado = val
+                    break
+            if  activo_encontrado:
+                print("Ya existe una persona con este Id :C ")
+                return
+            else: 
+                persona = {
 
         "id": identificacion,
         "nroId (CC, Nit)": input("ingrese el nuevo numero de cedula(SOLO NUMEROS): "),
@@ -51,27 +60,28 @@ def postPersonal():
         posicion = requests.post("http://154.38.171.54:5502/personas", data=json.dumps(persona, indent=4))
         res = posicion.json
         tablaactivos = [persona]
+        print("Persona Agregada Correctamente")
         return print(tabulate(tablaactivos, headers="keys", tablefmt='rounded_grid'))
 
 def deletePersonas(id):
-    try: 
-        persona = getpersonasId(id)
-        if persona:
-            asignacionesactivos = []
-            activos = activ.getAllDataActivos()
-            for activo in activos:
-                asignaciones = activo.get("asignaciones", [])
-                for asignacion in asignaciones:
-                    if "TipoAsignacion" in asignacion and asignacion["TipoAsignacion"]=="Persona" and asignacion["AsignadoA"] == id:
-                        asignacionesactivos.append(activo["NroItem"])
-                        break
+    # try: 
+    #     persona = getpersonasId(id)
+    #     if persona:
+    #         asignacionesactivos = []
+    #         activos = activ.getAllDataActivos()
+    #         for activo in activos:
+    #             asignaciones = activo.get("asignaciones", [])
+    #             for asignacion in asignaciones:
+    #                 if "TipoAsignacion" in asignacion and asignacion["TipoAsignacion"]=="Persona" and asignacion["AsignadoA"] == id:
+    #                     asignacionesactivos.append(activo["NroItem"])
+    #                     break
 
-            if asignacionesactivos:
-                print(colors.BOLDYELLOW+"NO SE PUEDE ELIMINAR UNA PERSONA QUE TENGA ACTIVOS ASIGNADOS"+colors.RESET)
-                menuPersonal()
+    #         if asignacionesactivos:
+    #             print(colors.BOLDYELLOW+"NO SE PUEDE ELIMINAR UNA PERSONA QUE TENGA ACTIVOS ASIGNADOS"+colors.RESET)
+    #             menuPersonal()
             
-    except KeyboardInterrupt:
-        return menuPersonal()
+    # except KeyboardInterrupt:
+    #     return menuPersonal()
 
     peticion = requests.delete(f"http://154.38.171.54:5502/personas/{id}")
     if peticion.status_code == 200:
@@ -79,6 +89,15 @@ def deletePersonas(id):
 
 def menuactualizar(id):
     while True:
+        activo_encontrado = None
+        for val in getDataPersonas():
+            if val.get("id") == id:
+                activo_encontrado = val
+                break
+        if not activo_encontrado:
+            print("No existe ninguna persona con este Id :C ")
+            return
+        
         print(colors.BOLDYELLOW+"""
               
 
@@ -94,6 +113,7 @@ def menuactualizar(id):
 
 """+colors.RESET)
         try: 
+
             personas ={}
             opcion = input("Ingrese una opcion: ")
             if re.match(r'^[1-5]$', opcion) is not None:
@@ -160,10 +180,11 @@ def menuPersonal():
             id = input("Ingresa el id de la persona que quiere elimina: ")
             print(tabulate(deletePersonas(id), headers="keys", tablefmt='rounded_grid'))
         elif(opcion==4): 
-            print(menuBusqueda())
+            print(tabulate(menuBusqueda(), headers="keys", tablefmt='rounded_grid' ))
         elif(opcion==2):
             id = input("Ingrese el id de la persona que desea actualizar: ")
-            print(menuactualizar(id))
+            menuactualizar(id)
+            print("Persona Editada Correctamente C: ")
 
 def getBuscarPersona(id):
     BuscarPersona= []
@@ -234,23 +255,20 @@ def menuBusqueda():
 
 
 """+colors.RESET)
-        try:
-            opcion = input("Ingrese una opcion: ")
-            if re.match(r'^[1-5]$', opcion) is not None:
-                opcion = int(opcion)
-            elif(opcion==0):
-                break
-            elif(opcion==1):
-                id = input("Ingrese el id de la persona que desea filtrar: ")
-                print(tabulate(getBuscarPersona(id), headers="keys", tablefmt='rounded_grid'))
-            elif(opcion==2):
-                cc = input("Ingrese el NroId que desea filtrar: ")
-                print(tabulate(getBuscarNroId(cc), headers="keys", tablefmt='rounded_grid'))
-            elif(opcion==3):
-                name = input("Ingrese el nombre de la persona que desea filtrar: ")
-                print(tabulate(getBuscarName(name), headers="keys", tablefmt='rounded_grid'))
-            elif(opcion==4):
-                email = input("Ingrese el Email de la persona que desea filtrar: ")
-                print(tabulate(getBuscarEmail(email), headers="keys", tablefmt='rounded_grid'))
-        except KeyboardInterrupt:
+
+        opcion = int(input("Ingrese una opcion: "))
+
+        if(opcion==0):
             break
+        elif(opcion==1):
+            id = input("Ingrese el id de la persona que desea filtrar: ")
+            print(tabulate(getBuscarPersona(id), headers="keys", tablefmt='rounded_grid'))
+        elif(opcion==2):
+            cc = input("Ingrese el NroId que desea filtrar: ")
+            print(tabulate(getBuscarNroId(cc), headers="keys", tablefmt='rounded_grid'))
+        elif(opcion==3):
+            name = input("Ingrese el nombre de la persona que desea filtrar: ")
+            print(tabulate(getBuscarName(name), headers="keys", tablefmt='rounded_grid'))
+        elif(opcion==4):
+            email = input("Ingrese el Email de la persona que desea filtrar: ")
+            print(tabulate(getBuscarEmail(email), headers="keys", tablefmt='rounded_grid'))

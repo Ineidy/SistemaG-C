@@ -2,6 +2,7 @@ import requests
 from tabulate import tabulate
 import json
 import modules.postPersonal as Personal
+import modules.postZonas as Zonas
 import modules.postActivos as activos 
 from datetime import datetime
 import re
@@ -54,7 +55,7 @@ def MenuTipoAsigna():
 
 def postAsignacionesPersona(idactivo):
 
-    asignadoa = input("Ingrese el id de la zona a la que le asignara el activo: ")
+    asignadoa = input("Ingrese el id de la Persona a la que le asignara el activo: ")
     responsable = input("Ingrese el id del encargado del movimiento del activo: ")
 
     responsable_existente = None
@@ -149,7 +150,7 @@ def postAsignacionesZonas(idactivo):
 
 
         responsable_existente = None
-        for person in Personal.getDataPersonas():
+        for person in Zonas.getDataZonas():
             if person.get("id") == responsable or person.get("id") == int(responsable):
                 responsable_existente = person
                 break
@@ -267,27 +268,20 @@ def menuAsignacionActivos():
             break    
 
 
-def getAllAsignaId(id):
-    activo_encontrado = None
-    for val in activos.getAllDataActivos():
-        if val.get("id") == id or val.get("id") == int(id):
-            activo_encontrado = val
-            break
-    if not activo_encontrado:
-        print("No existe un activo con este id :C ")
-        return
+def getAllAsignaId():
+
 
     asignacionid = []
-    for val in activos.getActivosId(id):
-        asignaciones = val.get('asignaciones', [])
+    for val in activos.getAllDataActivos():
+        asignaciones = val.get("asignaciones", [])
         for asignacion in asignaciones:
             asignacionid.append({
                     "NroItem": val.get('NroItem'),
                     "NroFormulario": val.get('NroFormulario'),
                     "Nombre": val.get('Nombre'),
                     "idEstado": val.get('idEstado'),
-                    "asignaciones =>": val.get(''),
-                    "NroAsignacion": asignacion.get('NroAsignacion'),
+                    "asignaciones =>":val.get(""),
+                    "NroAsignacion": asignacion.get("NroAsignacion"),
                     "FechaAsignación":  asignacion.get('FechaAsignación'),
                     "TipoAsignacion": asignacion.get('TipoAsignacion'),
                     "AsignadoA": asignacion.get('AsignadoA')
@@ -296,31 +290,31 @@ def getAllAsignaId(id):
     return asignacionid
 
 
-def getAllHistorialId():
+def getAllHistorialId(id):
+
+    historialid =[]
     activo_encontrado = None
-    for val in activos.getActivosId():
-        if val.get("id") == id or val.get("id") == int(id):
+    for val in activos.getAllDataActivos():
+        if val.get("id") == id:
             activo_encontrado = val
             break
     if not activo_encontrado:
         print("No existe un activo con este id :C ")
         return
 
-    historialid =[]
-    for val in activos.getAllDataActivos():
-        historial = val.get('historialActivos', [])
-        for historiales in historial:
-            historialid.append({
-                    "NroItem": val.get('NroItem'),
-                    "NroFormulario": val.get('NroFormulario'),
-                    "Nombre": val.get('Nombre'),
-                    "idEstado": val.get('idEstado'),
-                    "historial => ": val.get(''),
-                    "tipoMov": historiales.get('tipoMov'),
-                    "Fecha":  historiales.get('Fecha'),
-                    "tipoMov": historiales.get('tipoMov'),
-                    "idRespMov": historiales.get('idRespMov')
-            })
+    historial = val.get('historialActivos', [])
+    for historiales in historial:
+        historialid.append({
+                "NroItem": val.get('NroItem'),
+                "NroFormulario": val.get('NroFormulario'),
+                "Nombre": val.get('Nombre'),
+                "idEstado": val.get('idEstado'),
+                "historial => ": val.get(''),
+                "tipoMov": historiales.get('TipoMov'),
+                "FechaAsignacion":  historiales.get('FechaAsignacion'),
+                "TipoMov": historiales.get('TipoMov'),
+                "idRespMov": historiales.get('idRespMov')
+        })
 
     return historialid
 
@@ -333,7 +327,6 @@ def menupersonasOzonas():
                                 
                                 1. PERSONA
                                 2. ZONA
-                                0. SALIR
 
         -SI QUIERE SALIR DE UNA OPCION QUE SELECCIONO, PRESIONE CTROL + C PARA CANCELAR OPCION
 

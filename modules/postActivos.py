@@ -5,6 +5,7 @@ from tabulate import tabulate
 from datetime import datetime
 import modules.movimientosActivos as mov
 import main as main
+import modules.postPersonal as Personal
 
 class colors:
     RESET = '\033[0m'
@@ -26,24 +27,51 @@ def getActivosId(id):
     peticion= requests.get(f"http://154.38.171.54:5502/activos/{id}")
     return[peticion.json()] if peticion.ok else []
 
+
+
+def getAllActivosId(id):
+    idactivos=[]
+    for val in getAllDataActivos():
+        if(val.get('totalCapacidad') == id):
+            idactivos.append({
+                    "id": val.get('id'),
+                    "NroItem": val.get('NroItem'),
+                    "Nombre": val.get('Nombre'),
+                    "ValorUnitario": val.get('ValorUnitario')
+            })
+    return idactivos
+
 def deleteactivos(id):
     try: 
-        activo_encontrado = getActivosId(id)
+
+        activo_encontrado = None
+        for val in getAllDataActivos():
+            if val.get("id") == id:
+                activo_encontrado = val
+                break
         if not activo_encontrado:
-            return {"Mensaje": "Activo no encontrado"}
+            print("No existe un activo con este id :C ")
+            return
 
-        activo = activo_encontrado[0]
-
+        respMov= input("Ingrese el id de el responsable de el movimiento: ")
+        persona_existente = None
+        for person in Personal.getDataPersonas():
+            if person.get("id") == respMov or person.get("id") == int(respMov):
+                persona_existente = person
+                break
+        if not persona_existente:
+            print("No Existe Una Persona Con Este Id :C ")
+            return menuActivos()
 
         historial={
-            "NroId": input("Ingresa el NroId de este movimiento: "),
+            "NroId": (id),
             "Fecha":datetime.now().strftime("%Y-%d-%m"),
             "tipoMov": "2",
-            "idRespMov": input("Ingrese el id de el responsable de el movimiento: ")
+            "idRespMov": respMov
         }
-        activo["historialActivos"].append(historial)
+        activo_encontrado["historialActivos"].append(historial)
 
-        Activoactualizado = {**activo, "idEstado": "2"}
+        Activoactualizado = {**activo_encontrado, "idEstado": "2"}
         peticion = requests.put(f"http://154.38.171.54:5502/activos/{id}", data=json.dumps(Activoactualizado))
         res = peticion.json()
 
@@ -385,9 +413,11 @@ def menuActivos():
             elif(opcion==2):
                 id = input("Ingrese el id de el activo que desea actualizar: ")
                 print(tabulate(update(id), headers="keys", tablefmt='rounded_grid'))
+                print(colors.BOLDYELLOW+"Activo Editado correctamente!"+colors.RESET)
             elif(opcion==3):
                 id = input("Ingrese el id del activo al que desea eliminar el estado: ")
                 print(tabulate(deleteactivos(id), headers="keys", tablefmt='rounded_grid'))
+                print(colors.BOLDYELLOW+"Activo Eliminado correctamente!"+colors.RESET)
             elif(opcion==4):
                 print(tabulate(menubuscar(), headers="keys", tablefmt='rounded_grid'))
         except KeyboardInterrupt:
@@ -410,23 +440,6 @@ def getAllActivos():
                         "idEstado": val.get('idEstado')
         })
     return activos
-
-
-def getAllArticulos0():
-    articulo =[]
-    for val in getAllDataActivos():
-        if (val.get("idEstado") == "0"):
-            articulo.append(
-                {
-                        "id": val.get('id'),
-                        "NroItem": val.get('NroItem'),
-                        "NroFormulario": val.get('NroFormulario'),
-                        "Nombre": val.get('Nombre'),
-                        "idEstado": val.get('idEstado')
-                }
-            )
-    return articulo
-
 
 
 def getAllActivosIdCategoria1():
@@ -489,51 +502,6 @@ def getAllActivosIdCategoria2():
             })
     return activos
 
-def getAllArticulos1():
-    articulo1 =[]
-    for val in getAllDataActivos():
-        if (val.get("idEstado") == "1"):
-            articulo1.append(
-                {
-                        "id": val.get('id'),
-                        "NroItem": val.get('NroItem'),
-                        "NroFormulario": val.get('NroFormulario'),
-                        "Nombre": val.get('Nombre'),
-                        "idEstado": val.get('idEstado')
-                }
-            )
-    return articulo1
-
-def getAllArticulos3():
-    articulo3 =[]
-    for val in getAllDataActivos():
-        if (val.get("idEstado") == "3"):
-            articulo3.append(
-                {
-                        "id": val.get('id'),
-                        "NroItem": val.get('NroItem'),
-                        "NroFormulario": val.get('NroFormulario'),
-                        "Nombre": val.get('Nombre'),
-                        "idEstado": val.get('idEstado')
-                }
-            )
-    return articulo3
-
-
-def getAllArticulos2():
-    articulo2 =[]
-    for val in getAllDataActivos():
-        if (val.get('idEstado') == "2"):
-            articulo2.append(
-                {
-                        "id": val.get('id'),
-                        "NroItem": val.get('NroItem'),
-                        "NroFormulario": val.get('NroFormulario'),
-                        "Nombre": val.get('Nombre'),
-                        "idEstado": val.get('idEstado')
-                }
-            )
-    return articulo2
 
 
 
@@ -558,78 +526,6 @@ def getAllActivos2():
             )
     return articulo2
 
-def getAllActivosItem(item):
-    activosItem = []
-    for val in getAllDataActivos():
-        if(val.get('NroItem') == item):
-            activosItem.append({
-                    "id": val.get('id'),
-                    "NroItem": val.get('NroItem'),
-                    "NroFormulario": val.get('NroFormulario'),
-                    "Nombre": val.get('Nombre'),
-                    "idEstado": val.get('idEstado')
-            })
-    return activosItem
-
-def getAllActivosValorU(valorU):
-    activosvalor=[]
-    for val in getAllDataActivos():
-        if(val.get('ValorUnitario') == valorU):
-            activosvalor.append({
-                    "id": val.get('id'),
-                    "NroItem": val.get('NroItem'),
-                    "NroFormulario": val.get('NroFormulario'),
-                    "Nombre": val.get('Nombre'),
-                    "idEstado": val.get('idEstado'),
-                    "valorUnitario": val.get('ValorUnitario')
-            })
-    return activosvalor
-
-def getAllActivosIdCategoria(idcate):
-    activosidcate=[]
-    for val in getAllDataActivos():
-        if(val.get('idCategoria') == idcate):
-            activosidcate.append({
-                    "id": val.get('id'),
-                    "NroItem": val.get('NroItem'),
-                    "NroFormulario": val.get('NroFormulario'),
-                    "Nombre": val.get('Nombre'),
-                    "idEstado": val.get('idEstado'),
-                    "valorUnitario": val.get('ValorUnitario'),
-                    "idCategoria": val.get('idCategoria')
-            })
-    return activosidcate
-
-
-def getAllActivosIdTipo(idtipo):
-    activosidtipo=[]
-    for val in getAllDataActivos():
-        if(val.get('idTipo') == idtipo):
-            activosidtipo.append({
-                    "id": val.get('id'),
-                    "NroItem": val.get('NroItem'),
-                    "NroFormulario": val.get('NroFormulario'),
-                    "Nombre": val.get('Nombre'),
-                    "idEstado": val.get('idEstado'),
-                    "valorUnitario": val.get('ValorUnitario'),
-                    "idTipo": val.get('idTipo')
-            })
-    return activosidtipo
-
-def getAllActivosIdMarca(idmarca):
-    activosidmarca=[]
-    for val in getAllDataActivos():
-        if(val.get('idTipo') == idmarca):
-            activosidmarca.append({
-                    "id": val.get('id'),
-                    "NroItem": val.get('NroItem'),
-                    "NroFormulario": val.get('NroFormulario'),
-                    "Nombre": val.get('Nombre'),
-                    "idEstado": val.get('idEstado'),
-                    "valorUnitario": val.get('ValorUnitario'),
-                    "idMarca": val.get('idMarca')
-            })
-    return activosidmarca
 
 
 
@@ -641,55 +537,24 @@ def menubuscar():
 
                         MENU DE BUSQUEDAS DE ACTIVOS
                                         
-                        1. BUSCAR ACTIVOS NO ASIGNADOS
-                        2. BUSCAR ACTIVOS ASIGNADOS
-                        3. BUSCAR ACTIVOS DADOS DE BAJA POR DAÑO
-                        4. BUSCAR ACTIVOS EN REPARACION Y/O GARANTIA
-                        5. BUSCAR ACTIVOS POR EL ID 
-                        6. BUSCAR ACTIVOS POR EL NUMERO DE ITEM
-                        7. BUSCRA ACTIVO POR EL VALOR UNITARIO
-                        8. BUSCAR ACTIVO POR ID DE CATEGORIA
-                        9. BUSCAR ACTIVO POR ID DE TIPO
-                        10. BUSCAR ACTIVO POR ID DE LA MARCA
-                        0. SALIR
+                        1. BUSCAR ACTIVOS POR EL ID 
+                        2. SALIR
 
-        -PRESIONE CTRL + C PARA SALIR   
+                        -PRESIONE CTRL + C PARA SALIR   
 
 """+colors.RESET)
         try: 
             
             opcion = input("Ingrese una opcion: ")
-            if re.match(r'^[0-10]$', opcion) is not None:
+            if re.match(r'^[1-2]$', opcion) is not None:
                 opcion = int(opcion)
 
-            if(opcion==0):
+            if(opcion==2):
                 break
             elif(opcion==1):
-                print(tabulate(getAllArticulos0(),headers="keys", tablefmt='rounded_grid'))
-            elif(opcion==2):
-                print(tabulate(getAllArticulos1(),headers="keys", tablefmt='rounded_grid'))
-            elif(opcion==3):
-                print(tabulate(getAllArticulos2(),headers="keys", tablefmt='rounded_grid'))
-            elif(opcion==4):
-                print(tabulate(getAllArticulos3(),headers="keys", tablefmt='rounded_grid'))
-            elif(opcion==5):
                 id = input("Ingrese el id del activo que desea filtrar: ")
-                print(tabulate(getActivosId(id),headers="keys", tablefmt='rounded_grid'))
-            elif(opcion==6):
-                item = int(input("Ingrese el numero del item que desea filtrar: "))
-                print(tabulate(getAllActivosItem(item),headers="keys", tablefmt='rounded_grid'))
-            elif(opcion==7):
-                valorU = input("Ingrese el valor unitario que desea filtrar: ")
-                print(tabulate(getAllActivosValorU(valorU),headers="keys", tablefmt='rounded_grid'))
-            elif(opcion==8):
-                idcate = input("Ingrese el id de la categoria que desea filtrar: ")
-                print(tabulate(getAllActivosIdCategoria(idcate),headers="keys", tablefmt='rounded_grid'))
-            elif(opcion==9):
-                idtipo = input("Ingrese el id del tipo que desea filtrar: ")
-                print(tabulate(getAllActivosIdTipo(idtipo),headers="keys", tablefmt='rounded_grid'))
-            elif(opcion==10):
-                idmarca = input("Ingrese el id de la marca que desea filtrar: ")
-                print(tabulate(getAllActivosIdMarca(idmarca),headers="keys", tablefmt='rounded_grid'))
+                print(tabulate(getAllActivosId(id),headers="keys", tablefmt='rounded_grid'))
+
         except KeyboardInterrupt:
             break
 
@@ -718,11 +583,13 @@ def update(id):
     """+colors.RESET)
          
         try:
+
             activos = {}
             
             opcion = input("Ingrese una opcion: ")
             if re.match(r'^[0-9]$', opcion) is not None:
                 opcion = int(opcion)
+
 
             if opcion==1:
                     nmeroitem = input("Ingrese el numero de item (SOLO NUMEROS): ")
@@ -808,5 +675,6 @@ def update(id):
         peticion = requests.put(f'http://154.38.171.54:5502/activos/{id}', data=json.dumps(activoactualizado, indent=4))
         res = peticion.json()
         tablaactualuzar = [activos]
+        print("Activo Editado Correctamente :) ")
         return 
         

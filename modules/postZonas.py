@@ -3,6 +3,8 @@ import json
 import re
 from tabulate import tabulate
 import modules.postAsignaciones as asigna
+import modules.postPersonal as persona
+
 import os
 
 class colors:
@@ -32,9 +34,11 @@ def getPostZonasId(codigo):
 
 
 def postZonas():
+
     zonas = {}
     while True: 
         try: 
+
 
             if not zonas.get("nombreZona"):
                 namezona = input("Ingrese el nombre de la zona: ")
@@ -63,7 +67,14 @@ def postZonas():
 def updatezonas(id):
     zonas = {}
     while True:
-
+        responsable_existente = None
+        for person in getDataZonas():
+            if person.get("id") == id:
+                responsable_existente = person
+                break
+        if not responsable_existente:
+            print("No Existe Una Zona Con Este Id :C ")
+            return
         try: 
             if not zonas.get("nombreZona"):
                 namezona = input("Ingrese el nuevo nombre de la zona: ")
@@ -101,10 +112,33 @@ def updatezonas(id):
 
 def deleteZonas(id):
     try:
-            peticion = requests.delete(f"http://154.38.171.54:5502/zonas/{id}")
-            if peticion.status_code == 200:
-                print(colors.BOLDYELLOW+"Zona Eliminada") 
-                return True
+            
+        responsable_existente = None
+        for person in getDataZonas():
+            if person.get("id") == id:
+                responsable_existente = person
+                break
+        if not responsable_existente:
+            print("No Existe Una Zona Con Este Id :C ")
+            return
+        
+
+
+        respMov= input("Ingrese el id de el responsable de el movimiento: ")
+        persona_existente = None
+        for person in persona.getDataPersonas():
+            if person.get("id") == respMov or person.get("id") == int(respMov):
+                persona_existente = person
+                break
+        if not persona_existente:
+            print("No Existe Una Persona Con Este Id :C ")
+            return 
+    
+        peticion = requests.delete(f"http://154.38.171.54:5502/zonas/{id}")
+        if peticion.status_code == 200:
+            print(colors.BOLDYELLOW+"Zona Eliminada") 
+            return True
+            
     except KeyboardInterrupt:
         return menuzonas()
 
@@ -191,7 +225,6 @@ def getAllZonasCapacidad(totalCapacidad):
 
 def menubusquedazonas():
     while True:
-        os.system("clear")
         print(colors.BOLDYELLOW+"""
 
 
@@ -215,15 +248,14 @@ def menubusquedazonas():
             if(opcion==1):
                 id = input("Ingrese el id de la zona que desea buscar: ")
                 print(tabulate(getAllZonasId(id), headers="keys", tablefmt='rounded_grid'))
-                print("Oprima una tecla para continuar...")
+
             elif(opcion==2):
                 nombreZona = input("Ingrese el nombre de la zona que desea buscar: ")
                 print(tabulate(getAllZonasNombre(nombreZona), headers="keys", tablefmt='rounded_grid'))
-                print("Oprima una tecla para continuar...")
             elif(opcion==3):
                 totalCapacidad = int(input("Ingresa La capacidad total de la zona que deseas buscar: "))
                 print(tabulate(getAllZonasCapacidad(totalCapacidad), headers="keys", tablefmt='rounded_grid'))
-                print("Oprima una tecla para continuar...")
+    
             elif(opcion==4):
                 break
         except KeyboardInterrupt:

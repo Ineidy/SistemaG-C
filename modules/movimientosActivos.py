@@ -21,7 +21,7 @@ def menuMoviActivos():
                         3. CAMBIAR ASIGNACION DE ACTIVO
                         4. ENVIAR A GARANTIA ACTIVO5
                         5. REGRESAR AL MENU PRINCIPAL
-                PRECIONE CTRL + C PARA SALIR DEL MENU PRINCIPAL
+
 """+colors.RESET)
         opcion = int(input("Ingrese una opcion: "))
         if opcion==5:

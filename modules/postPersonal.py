@@ -64,28 +64,25 @@ def postPersonal():
         return print(tabulate(tablaactivos, headers="keys", tablefmt='rounded_grid'))
 
 def deletePersonas(id):
-    # try: 
-    #     persona = getpersonasId(id)
-    #     if persona:
-    #         asignacionesactivos = []
-    #         activos = activ.getAllDataActivos()
-    #         for activo in activos:
-    #             asignaciones = activo.get("asignaciones", [])
-    #             for asignacion in asignaciones:
-    #                 if "TipoAsignacion" in asignacion and asignacion["TipoAsignacion"]=="Persona" and asignacion["AsignadoA"] == id:
-    #                     asignacionesactivos.append(activo["NroItem"])
-    #                     break
+        persona = getpersonasId(id)
+        if persona:
+            asignacionesactivos = []
+            activos = activ.getAllDataActivos()
+            for activo in activos:
+                asignaciones = activo.get("asignaciones", [])
+                for asignacion in asignaciones:
+                    if "TipoAsignacion" in asignacion and asignacion["TipoAsignacion"]=="Persona" and asignacion["AsignadoA"] == id:
+                        asignacionesactivos.append(activo["NroItem"])
+                        break
 
-    #         if asignacionesactivos:
-    #             print(colors.BOLDYELLOW+"NO SE PUEDE ELIMINAR UNA PERSONA QUE TENGA ACTIVOS ASIGNADOS"+colors.RESET)
-    #             menuPersonal()
+            if asignacionesactivos:
+                print(colors.BOLDYELLOW+"NO SE PUEDE ELIMINAR UNA PERSONA QUE TENGA ACTIVOS ASIGNADOS"+colors.RESET)
+                menuPersonal()
             
-    # except KeyboardInterrupt:
-    #     return menuPersonal()
 
-    peticion = requests.delete(f"http://154.38.171.54:5502/personas/{id}")
-    if peticion.status_code == 200:
-        print(colors.BOLDYELLOW+"Persona Eliminada"+colors.RESET)
+        peticion = requests.delete(f"http://154.38.171.54:5502/personas/{id}")
+        if peticion.status_code == 200:
+            print(colors.BOLDYELLOW+"Persona Eliminada"+colors.RESET)
 
 def menuactualizar(id):
     while True:
@@ -139,7 +136,7 @@ def menuactualizar(id):
             break
 
         personaactualizado = {**activoexistente[0], **personas}
-        peticion = requests.put(f'http://154.38.171.54:5502/personas/{id}', data=json.dumps(personaactualizado))
+        peticion = requests.put(f'http://154.38.171.54:5502/personas/{id}', data=json.dumps(personaactualizado, indent=4))
         res = peticion.json()
 
         if peticion.status_code == 200:

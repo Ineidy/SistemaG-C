@@ -1,5 +1,5 @@
 NroAsignacion	1
-FechaAsignación	"2024-05-14"
+FechaAsignacion	"2024-05-14"
 TipoAsignacion	"Persona"
 AsignadoA	"2"
 

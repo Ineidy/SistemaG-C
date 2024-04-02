@@ -97,7 +97,7 @@ def updatezonas(id):
             return {"Mensaje": "Zona no encontrada"}
         
         zonaactualizada = {**zonaexistente[0], **zonas}
-        peticion = requests.put(f'http://154.38.171.54:5502/zonas/{id}', data=json.dumps(zonaactualizada))
+        peticion = requests.put(f'http://154.38.171.54:5502/zonas/{id}', data=json.dumps(zonaactualizada, indent=4))
         res = peticion.json()
 
         if peticion.status_code == 200:

@@ -4,6 +4,7 @@ import json
 from tabulate import tabulate
 from datetime import datetime
 import modules.movimientosActivos as mov
+import modules.postZonas as Zonas
 import main as main
 import modules.postPersonal as Personal
 
@@ -32,7 +33,7 @@ def getActivosId(id):
 def getAllActivosId(id):
     idactivos=[]
     for val in getAllDataActivos():
-        if(val.get('totalCapacidad') == id):
+        if(val.get('id') == id):
             idactivos.append({
                     "id": val.get('id'),
                     "NroItem": val.get('NroItem'),
@@ -52,7 +53,10 @@ def deleteactivos(id):
         if not activo_encontrado:
             print("No existe un activo con este id :C ")
             return
-
+        if activo_encontrado.get("idEstado")=="1":
+            print("EL ACTIVO NO PUEDE SER ELIMINADO YA QUE UNA PERSONA O ZONA ESTA ASIGNADO A EL")
+            return 
+        
         respMov= input("Ingrese el id de el responsable de el movimiento: ")
         persona_existente = None
         for person in Personal.getDataPersonas():
@@ -72,7 +76,7 @@ def deleteactivos(id):
         activo_encontrado["historialActivos"].append(historial)
 
         Activoactualizado = {**activo_encontrado, "idEstado": "2"}
-        peticion = requests.put(f"http://154.38.171.54:5502/activos/{id}", data=json.dumps(Activoactualizado))
+        peticion = requests.put(f"http://154.38.171.54:5502/activos/{id}", data=json.dumps(Activoactualizado, indent=4))
         res = peticion.json()
 
         if peticion.status_code == 200:
@@ -88,29 +92,38 @@ def deleteactivos(id):
 
 def cambiarEstadoa0(id):
     activo = getActivosId(id)
-    
-
-
-
     if not activo:
         return{"mensaje": "Activo no encontrado"}
-    if activo.get["idEstado"] == "2":
-        print("ACTIVO DADO DE BAJA, NO SE PUEDE RETORNAR ")
-        False
-
     activo = activo[0]
+    if activo.get("idEstado") == "2":
+        print("ACTIVO DADO DE BAJA, NO SE PUEDE RETORNAR ")
+        return False
+    if activo.get("idEstado") == "0":
+        print("ACTIVO SIN ASIGNACION, NO SE PUEDE RETORNAR ")
+        return False
 
+    idResp = input("Ingrese el id de el responsable de el movimiento: ")
+
+    persona_existente = None
+    for person in Personal.getDataPersonas():
+        if person.get("id") == idResp or person.get("id") == int(idResp):
+            persona_existente = person
+            break
+    if not persona_existente:
+        print("No Existe Una Persona Con Este Id :C ")
+        return menuActivos()
+    
     historial={
         "NroId": (id),
         "Fecha":datetime.now().strftime("%Y-%d-%m"),
-        "tipoMov": "2",
-        "idRespMov": input("Ingrese el id de el responsable de el movimiento: ")
+        "tipoMov": "0",
+        "idRespMov": idResp
     }
     activo["historialActivos"].append(historial)
 
 
     Activoactualizado = {**activo, "idEstado": "0"}
-    peticion = requests.put(f"http://154.38.171.54:5502/activos/{id}", data=json.dumps(Activoactualizado))
+    peticion = requests.put(f"http://154.38.171.54:5502/activos/{id}", data=json.dumps(Activoactualizado, indent=4))
     res = peticion.json()
 
     if peticion.status_code == 200:
@@ -128,18 +141,27 @@ def cambiarEstadoa2(id):
         return{"mensaje": "Activo no encontrado"}
     
     activo = activo[0]
-
+    idRes = input("Ingrese el id de el responsable de el movimiento: ")
+    persona_existente = None
+    for person in Personal.getDataPersonas():
+        if person.get("id") == idRes or person.get("id") == int(idRes):
+            persona_existente = person
+            break
+    if not persona_existente:
+        print("No Existe Una Persona Con Este Id :C ")
+        return menuActivos()
+    
     historial={
         "NroId": (id),
         "Fecha":datetime.now().strftime("%Y-%d-%m"),
         "tipoMov": "2",
-        "idRespMov": input("Ingrese el id de el responsable de el movimiento: ")
+        "idRespMov": idRes
     }
     activo["historialActivos"].append(historial)
 
 
     Activoactualizado = {**activo, "idEstado": "2"}
-    peticion = requests.put(f"http://154.38.171.54:5502/activos/{id}", data=json.dumps(Activoactualizado))
+    peticion = requests.put(f"http://154.38.171.54:5502/activos/{id}", data=json.dumps(Activoactualizado, indent=4))
     res = peticion.json()
 
     if peticion.status_code == 200:
@@ -149,29 +171,156 @@ def cambiarEstadoa2(id):
         res["Mensaje"] = "Error en la retornar el activo!"
     return [res]
 
+def menupersonasOzonas(): 
+    while True:
+        print(colors.BOLDYELLOW+"""
+                        QUE TIPO DE ASIGNACION ES:
+                                
+                                1. PERSONA
+                                2. ZONA
 
+        -SI QUIERE SALIR DE UNA OPCION QUE SELECCIONO, PRESIONE CTROL + C PARA CANCELAR OPCION
 
-def reasignar(id):
+"""+colors.RESET)
+        try: 
+            opcion = input("Ingrese una opcion: ")
+            if re.match(r'^[1-5]$', opcion) is not None:
+                opcion = int(opcion)
 
-    NroID = input("Ingrese el id de la asignacion: ")
+            if(opcion==1):
+                id = input("Ingrese el id del activo al que desea agregarle la asignacion: ")
+                reasignarpersona(id)
+            elif(opcion==2):
+                id = input("Ingrese el id del activo al que desea agregarle la asignacion: ")
+                reasignarZona(id)
+            elif(opcion==0):
+                break
+        except KeyboardInterrupt:
+            break
 
-    fechaasig = datetime.now().strftime("%Y-%d-%m"),
-    personaozona = input("Ingrese el TipoAsignacion (Persona) o (Zona): "),
-    asignadoa = input("Ingrese el id de la Persona o Zona a la que le ReAsignara el activo: ")
-    responsable = input("Ingrese el id del encargado del ReAsignamiento del activo: ")
+def reasignarZona(id):
+    activo = getActivosId(id)
+    if not activo:
+        return{"mensaje": "Activo no encontrado"}
 
+    idResp = input("Ingrese el id de el responsable de el movimiento: ")
+
+    persona_existente = None
+    for person in Personal.getDataPersonas():
+        if person.get("id") == idResp or person.get("id") == int(idResp):
+            persona_existente = person
+            break
+    if not persona_existente:
+        print("No Existe Una Persona Con Este Id :C ")
+        return menuActivos()
+
+    asignadoa = input("Ingrese el id de la Zona a la que le ReAsignara el activo: ")
+
+    responsable_existente = None
+    for person in Zonas.getDataZonas():
+        if person.get("id") == asignadoa or person.get("id") == int(asignadoa):
+            responsable_existente = person
+            break
+    if not responsable_existente:
+        print("No Existe Una Zona Con Este Id :C ")
+        return
     nuevainfo ={
-        "NroAsignacion": NroID,
-        "FechaAsignación": fechaasig,
-        "TipoAsignacion": personaozona,
+        "NroAsignacion": id,
+        "FechaAsignacion": datetime.now().strftime("%Y-%d-%m"),
+        "TipoAsignacion": "Zona",
         "AsignadoA": asignadoa
     }
 
     nuevohistorial ={
-                "NroId":NroID,
-                "FechaAsignacion": fechaasig,
+                "NroId":id,
+                "FechaAsignacion": datetime.now().strftime("%Y-%d-%m"),
                 "TipoMov": "4",
-                "idRespMov": responsable
+                "idRespMov": idResp
+    }
+
+    activo = obtenerAsignaId(id)
+    if activo:
+        if activo.get("idEstado")== "3":
+            print(colors.BOLDYELLOW+"EL ACTIVO ESTA EN RAPARACION Y/O GARANTIA, NO PUEDE SER ASIGNADO"+colors.RESET)
+            return 
+
+        if activo.get("idEstado") == "2":
+            print(colors.BOLDYELLOW+"EL ACTIVO ESTA DE BAJA, NO PUEDE SER ASIGNADO"+colors.RESET)
+            return 
+        
+
+        if activo.get("idEstado") == "1":
+            True
+
+        asignaciones = activo.get("asignaciones", [])
+        asignaciones.append(nuevainfo)
+        activo["asignaciones"] = asignaciones
+
+
+
+        activoH = activo.get("historialActivos", [])
+        activoH.append(nuevohistorial)
+        activo["historialActivos"] = activoH
+
+
+
+
+        link =  f"http://154.38.171.54:5502/activos/{id}"
+        respuesta = requests.put(link, json=activo)
+        if respuesta.status_code == 200:
+            activo["idEstado"]="1"
+            True
+            requests.put(link, json=activo)
+            print(colors.BOLDYELLOW+"Activo ReAsignado correctamente"+colors.RESET)
+            return 
+        else: 
+            print(colors.BOLDYELLOW+"Error al ReAsignar el Activo"+colors.RESET)
+            return 
+    else: 
+        print(colors.BOLDYELLOW+"Activo no encontrado"+colors.RESET)
+        return 
+
+
+
+def reasignarpersona(id):
+    activo = getActivosId(id)
+    if not activo:
+        return{"mensaje": "Activo no encontrado"}
+
+    idResp = input("Ingrese el id de el responsable de el movimiento: ")
+
+    persona_existente = None
+    for person in Personal.getDataPersonas():
+        if person.get("id") == idResp or person.get("id") == int(idResp):
+            persona_existente = person
+            break
+    if not persona_existente:
+        print("No Existe Una Persona Con Este Id :C ")
+        return menuActivos()
+
+    asignadoa = input("Ingrese el id de la Persona a la que le ReAsignara el activo: ")
+
+    persona_existente = None
+    for person in Personal.getDataPersonas():
+        if person.get("id") == asignadoa or person.get("id") == int(asignadoa):
+            persona_existente = person
+            break
+    if not persona_existente:
+        print("No Existe Una Persona Con Este Id :C ")
+        return
+
+    nuevainfo ={
+        "NroAsignacion": id,
+        "FechaAsignacion": datetime.now().strftime("%Y-%d-%m"),
+        "TipoAsignacion": "Persona",
+        "AsignadoA": asignadoa
+    }
+
+    nuevohistorial ={
+                "NroId":id,
+                "FechaAsignacion": datetime.now().strftime("%Y-%d-%m"),
+                "TipoMov": "4",
+                "idRespMov": idResp
     }
 
     activo = obtenerAsignaId(id)
@@ -221,32 +370,41 @@ def reasignar(id):
 
 
 def cambiarEstadoa3(id):
+    activo = getActivosId(id)
+    if not activo:
+        return{"mensaje": "Activo no encontrado"}
+    
+    activo = activo[0]
+    idRes = input("Ingrese el id de el responsable de el movimiento: ")
+    persona_existente = None
+    for person in Personal.getDataPersonas():
+        if person.get("id") == idRes or person.get("id") == int(idRes):
+            persona_existente = person
+            break
+    if not persona_existente:
+        print("No Existe Una Persona Con Este Id :C ")
+        return menuActivos()
+    
 
-        activo = getActivosId(id)
-        if not activo:
-            return{"mensaje": "Activo no encontrado"}
-        
-        activo = activo[0]
-
-        historial={
-            "NroId": (id),
-            "Fecha":datetime.now().strftime("%Y-%d-%m"),
-            "tipoMov": "3",
-            "idRespMov": input("Ingrese el id de el responsable de el movimiento: ")
-        }
-        activo["historialActivos"].append(historial)
+    historial={
+        "NroId": (id),
+        "Fecha":datetime.now().strftime("%Y-%d-%m"),
+        "tipoMov": "3",
+        "idRespMov": input("Ingrese el id de el responsable de el movimiento: ")
+    }
+    activo["historialActivos"].append(historial)
 
 
-        Activoactualizado = {**activo, "idEstado": "3"}
-        peticion = requests.put(f"http://154.38.171.54:5502/activos/{id}", data=json.dumps(Activoactualizado))
-        res = peticion.json()
+    Activoactualizado = {**activo, "idEstado": "3"}
+    peticion = requests.put(f"http://154.38.171.54:5502/activos/{id}", data=json.dumps(Activoactualizado, indent=4))
+    res = peticion.json()
 
-        if peticion.status_code == 200:
-            res["Mensaje"] = "Activo retornado correctamente!"
+    if peticion.status_code == 200:
+        res["Mensaje"] = "Activo retornado correctamente!"
 
-        else: 
-            res["Mensaje"] = "Error en la retornar el activo!"
-        return [res]
+    else: 
+        res["Mensaje"] = "Error en la retornar el activo!"
+    return [res]
 
 
 

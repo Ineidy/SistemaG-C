@@ -54,93 +54,95 @@ def MenuTipoAsigna():
 
 
 def postAsignacionesPersona(idactivo):
+    try: 
+        asignadoa = input("Ingrese el id de la Persona a la que le asignara el activo: ")
+        responsable = input("Ingrese el id del encargado del movimiento del activo: ")
 
-    asignadoa = input("Ingrese el id de la Persona a la que le asignara el activo: ")
-    responsable = input("Ingrese el id del encargado del movimiento del activo: ")
+        responsable_existente = None
+        for person in Personal.getDataPersonas():
+            if person.get("id") == responsable or person.get("id") == int(responsable):
+                responsable_existente = person
+                break
+        if not responsable_existente:
+            print("No Existe Una Persona Con Este Id :C ")
+            return
 
-    responsable_existente = None
-    for person in Personal.getDataPersonas():
-        if person.get("id") == responsable or person.get("id") == int(responsable):
-            responsable_existente = person
-            break
-    if not responsable_existente:
-        print("No Existe Una Persona Con Este Id :C ")
-        return
+        persona_existente = None
+        for person in Personal.getDataPersonas():
+            if person.get("id") == asignadoa or person.get("id") == int(asignadoa):
+                persona_existente = person
+                break
+        if not persona_existente:
+            print("No Existe Una Persona Con Este Id :C ")
+            return
 
-    persona_existente = None
-    for person in Personal.getDataPersonas():
-        if person.get("id") == asignadoa or person.get("id") == int(asignadoa):
-            persona_existente = person
-            break
-    if not persona_existente:
-        print("No Existe Una Persona Con Este Id :C ")
-        return
+        activo_encontrado = None
+        for val in activos.getAllDataActivos():
+            if val.get("id") == idactivo or val.get("id") == int(idactivo):
+                activo_encontrado = val
+                break
+        if not activo_encontrado:
+            print("No existe un activo con este id :C ")
+            return
 
-    activo_encontrado = None
-    for val in activos.getAllDataActivos():
-        if val.get("id") == idactivo or val.get("id") == int(idactivo):
-            activo_encontrado = val
-            break
-    if not activo_encontrado:
-        print("No existe un activo con este id :C ")
-        return
+        nuevainfo ={
+            "NroAsignacion": (idactivo),
+            "FechaAsignacion": datetime.now().strftime("%Y-%d-%m"),
+            "TipoAsignacion": "Persona",
+            "AsignadoA": asignadoa
+        }
 
-    nuevainfo ={
-        "NroAsignacion": (idactivo),
-        "FechaAsignación": datetime.now().strftime("%Y-%d-%m"),
-        "TipoAsignacion": "Persona",
-        "AsignadoA": asignadoa
-    }
+        nuevohistorial ={
+                    "NroId":(idactivo),
+                    "FechaAsignacion": datetime.now().strftime("%Y-%d-%m"),
+                    "TipoMov": "1",
+                    "idRespMov": responsable
+        }
 
-    nuevohistorial ={
-                "NroId":(idactivo),
-                "FechaAsignacion": datetime.now().strftime("%Y-%d-%m"),
-                "TipoMov": "1",
-                "idRespMov": responsable
-    }
+        activo = obtenerAsignaId(idactivo)
+        if activo:
+            if activo.get("idEstado")== "3":
+                print(colors.BOLDYELLOW+"EL ACTIVO ESTA EN RAPARACION Y/O GARANTIA, NO PUEDE SER ASIGNADO"+colors.RESET)
+                return False
+            if activo.get("idEstado")=="1":
+                print(colors.BOLDYELLOW+"EL ACTIVO YA ESTA ASIGNADO"+colors.RESET)
+                return False
 
-    activo = obtenerAsignaId(idactivo)
-    if activo:
-        if activo.get("idEstado")== "3":
-            print(colors.BOLDYELLOW+"EL ACTIVO ESTA EN RAPARACION Y/O GARANTIA, NO PUEDE SER ASIGNADO"+colors.RESET)
-            return False
+            if activo.get("idEstado") == "2":
+                print(colors.BOLDYELLOW+"EL ACTIVO ESTA DE BAJA, NO PUEDE SER ASIGNADO"+colors.RESET)
+                return False
+            if activo.get("idEstado") == "0":
+                True
 
-        if activo.get("idEstado") == "2":
-            print(colors.BOLDYELLOW+"EL ACTIVO ESTA DE BAJA, NO PUEDE SER ASIGNADO"+colors.RESET)
-            return False
-        if activo.get("IdEstado")=="1":
-            print(colors.BOLDYELLOW+"EL ACTIVO YA ESTA ASIGNADO"+colors.RESET)
-            return False
-        if activo.get("idEstado") == "0":
-            True
-
-        asignaciones = activo.get("asignaciones", [])
-        asignaciones.append(nuevainfo)
-        activo["asignaciones"] = asignaciones
-
-
-
-        activoH = activo.get("historialActivos", [])
-        activoH.append(nuevohistorial)
-        activo["historialActivos"] = activoH
+            asignaciones = activo.get("asignaciones", [])
+            asignaciones.append(nuevainfo)
+            activo["asignaciones"] = asignaciones
 
 
 
+            activoH = activo.get("historialActivos", [])
+            activoH.append(nuevohistorial)
+            activo["historialActivos"] = activoH
 
-        link =  f"http://154.38.171.54:5502/activos/{idactivo}"
-        respuesta = requests.put(link, json=activo)
-        if respuesta.status_code == 200:
-            activo["idEstado"]="1"
-            requests.put(link, json=activo)
-            print(colors.BOLDYELLOW+"Asignacion guardada correctamente"+colors.RESET)
-            return True
+
+
+
+            link =  f"http://154.38.171.54:5502/activos/{idactivo}"
+            respuesta = requests.put(link, json=activo)
+            if respuesta.status_code == 200:
+                activo["idEstado"]="1"
+                requests.put(link, json=activo)
+                print(colors.BOLDYELLOW+"Asignacion guardada correctamente"+colors.RESET)
+                return True
+            else: 
+                print(colors.BOLDYELLOW+"Error al guardad la asignacion"+colors.RESET)
+                return False
         else: 
-            print(colors.BOLDYELLOW+"Error al guardad la asignacion"+colors.RESET)
+            print(colors.BOLDYELLOW+"Activo no encontrado"+colors.RESET)
             return False
-    else: 
-        print(colors.BOLDYELLOW+"Activo no encontrado"+colors.RESET)
-        return False
-    
+        
+    except KeyboardInterrupt:
+        return
 
 
 def postAsignacionesZonas(idactivo):
@@ -178,7 +180,7 @@ def postAsignacionesZonas(idactivo):
 
         nuevainfo ={
             "NroAsignacion":(idactivo), 
-            "FechaAsignación": datetime.now().strftime("%Y-%d-%m"),
+            "FechaAsignacion": datetime.now().strftime("%Y-%d-%m"),
             "TipoAsignacion": "Zona",
             "AsignadoA": asignadoa
 
@@ -194,14 +196,17 @@ def postAsignacionesZonas(idactivo):
             if activo.get("idEstado")== "3":
                 print(colors.BOLDYELLOW+"EL ACTIVO ESTA EN RAPARACION Y/O GARANTIA, NO PUEDE SER ASIGNADO"+colors.RESET)
                 return False
+            
+            if activo.get("idEstado")=="1":
+                print(colors.BOLDYELLOW+"EL ACTIVO YA ESTA ASIGNADO"+colors.RESET)
+                return False
+            
             if activo.get("idEstado") == "0":
                 True
             if activo.get("idEstado") == "2":
                 print(colors.BOLDYELLOW+"EL ACTIVO ESTA DE BAJA, NO PUEDE SER ASIGNADO"+colors.RESET)
                 return False
-            if activo.get("IdEstado")=="1":
-                print(colors.BOLDYELLOW+"EL ACTIVO YA ESTA ASIGNADO"+colors.RESET)
-                return False
+
             
 
             asignaciones = activo.get("asignaciones", [])
@@ -282,7 +287,7 @@ def getAllAsignaId():
                     "idEstado": val.get('idEstado'),
                     "asignaciones =>":val.get(""),
                     "NroAsignacion": asignacion.get("NroAsignacion"),
-                    "FechaAsignación":  asignacion.get('FechaAsignación'),
+                    "FechaAsignacion":  asignacion.get('FechaAsignacion'),
                     "TipoAsignacion": asignacion.get('TipoAsignacion'),
                     "AsignadoA": asignacion.get('AsignadoA')
                     

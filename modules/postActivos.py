@@ -15,17 +15,17 @@ class colors:
 
 
 def obtenerAsignaId(id):
-    peticionAsigna = requests.get(f"http://154.38.171.54:5503/activos/{id}")
+    peticionAsigna = requests.get(f"http://154.38.171.54:5501/activos/{id}")
     dataAsignaId= peticionAsigna.json()
     return dataAsignaId
 
 def getAllDataActivos():
-    peticionactivos = requests.get("http://154.38.171.54:5503/activos")
+    peticionactivos = requests.get("http://154.38.171.54:5501/activos")
     dataactivos = peticionactivos.json()
     return dataactivos
 
 def getActivosId(id):
-    peticion= requests.get(f"http://154.38.171.54:5503/activos/{id}")
+    peticion= requests.get(f"http://154.38.171.54:5501/activos/{id}")
     return[peticion.json()] if peticion.ok else []
 
 
@@ -76,7 +76,7 @@ def deleteactivos(id):
         activo_encontrado["historialActivos"].append(historial)
 
         Activoactualizado = {**activo_encontrado, "idEstado": "2"}
-        peticion = requests.put(f"http://154.38.171.54:5503/activos/{id}", data=json.dumps(Activoactualizado, indent=4))
+        peticion = requests.put(f"http://154.38.171.54:5501/activos/{id}", data=json.dumps(Activoactualizado, indent=4))
         res = peticion.json()
 
         if peticion.status_code == 200:
@@ -123,7 +123,7 @@ def cambiarEstadoa0(id):
 
 
     Activoactualizado = {**activo, "idEstado": "0"}
-    peticion = requests.put(f"http://154.38.171.54:5503/activos/{id}", data=json.dumps(Activoactualizado, indent=4))
+    peticion = requests.put(f"http://154.38.171.54:5501/activos/{id}", data=json.dumps(Activoactualizado, indent=4))
     res = peticion.json()
 
     if peticion.status_code == 200:
@@ -161,7 +161,7 @@ def cambiarEstadoa2(id):
 
 
     Activoactualizado = {**activo, "idEstado": "2"}
-    peticion = requests.put(f"http://154.38.171.54:5503/activos/{id}", data=json.dumps(Activoactualizado, indent=4))
+    peticion = requests.put(f"http://154.38.171.54:5501/activos/{id}", data=json.dumps(Activoactualizado, indent=4))
     res = peticion.json()
 
     if peticion.status_code == 200:
@@ -265,7 +265,7 @@ def reasignarZona(id):
 
 
 
-        link =  f"http://154.38.171.54:5503/activos/{id}"
+        link =  f"http://154.38.171.54:5501/activos/{id}"
         respuesta = requests.put(link, json=activo)
         if respuesta.status_code == 200:
             activo["idEstado"]="1"
@@ -350,7 +350,7 @@ def reasignarpersona(id):
 
 
 
-        link =  f"http://154.38.171.54:5503/activos/{id}"
+        link =  f"http://154.38.171.54:5501/activos/{id}"
         respuesta = requests.put(link, json=activo)
         if respuesta.status_code == 200:
             activo["idEstado"]="1"
@@ -396,7 +396,7 @@ def cambiarEstadoa3(id):
 
 
     Activoactualizado = {**activo, "idEstado": "3"}
-    peticion = requests.put(f"http://154.38.171.54:5503/activos/{id}", data=json.dumps(Activoactualizado, indent=4))
+    peticion = requests.put(f"http://154.38.171.54:5501/activos/{id}", data=json.dumps(Activoactualizado, indent=4))
     res = peticion.json()
 
     if peticion.status_code == 200:
@@ -529,7 +529,7 @@ def postActivos():
         except Exception as error:
             print(error)
 
-        posicion = requests.post("http://154.38.171.54:5503/activos", data=json.dumps(activos, indent=4))
+        posicion = requests.post("http://154.38.171.54:5501/activos", data=json.dumps(activos, indent=4))
         res = posicion.json
         tablaactivos = [activos]
         return print(tabulate(tablaactivos, headers="keys", tablefmt='rounded_grid'))
@@ -830,7 +830,7 @@ def update(id):
         if not activoexistente:
             return {"Mensaje": "Activo no encontrado"}
         activoactualizado = {**activoexistente[0], **activos}
-        peticion = requests.put(f'http://154.38.171.54:5503/activos/{id}', data=json.dumps(activoactualizado, indent=4))
+        peticion = requests.put(f'http://154.38.171.54:5501/activos/{id}', data=json.dumps(activoactualizado, indent=4))
         res = peticion.json()
         tablaactualuzar = [activos]
         print("Activo Editado Correctamente :) ")

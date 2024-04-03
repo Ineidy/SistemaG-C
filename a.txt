@@ -61,7 +61,7 @@ def update(id):
                 return {"Mensaje": "Activo no encontrado"}
             
             activoactualizado = {**activoexistente[0], **activos}
-            peticion = requests.put(f'http://154.38.171.54:5503/activos/{id}', data=json.dumps(activoactualizado))
+            peticion = requests.put(f'http://154.38.171.54:5501/activos/{id}', data=json.dumps(activoactualizado))
             res = peticion.json()
 
             if peticion.status_code == 200:

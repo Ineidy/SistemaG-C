@@ -15,12 +15,12 @@ class colors:
 
 
 def getDataPersonas():
-    peticion = requests.get("http://154.38.171.54:5503/personas")
+    peticion = requests.get("http://154.38.171.54:5501/personas")
     data = peticion.json()
     return data
 
 def getpersonasId(id):
-    peticion= requests.get(f"http://154.38.171.54:5503/personas/{id}")
+    peticion= requests.get(f"http://154.38.171.54:5501/personas/{id}")
     return[peticion.json()] if peticion.ok else []
 
 def postPersonal():
@@ -57,7 +57,7 @@ def postPersonal():
         except KeyboardInterrupt:
             break
 
-        posicion = requests.post("http://154.38.171.54:5503/personas", data=json.dumps(persona, indent=4))
+        posicion = requests.post("http://154.38.171.54:5501/personas", data=json.dumps(persona, indent=4))
         res = posicion.json
         tablaactivos = [persona]
         print("Persona Agregada Correctamente")
@@ -80,7 +80,7 @@ def deletePersonas(id):
                 menuPersonal()
             
 
-        peticion = requests.delete(f"http://154.38.171.54:5503/personas/{id}")
+        peticion = requests.delete(f"http://154.38.171.54:5501/personas/{id}")
         if peticion.status_code == 200:
             print(colors.BOLDYELLOW+"Persona Eliminada"+colors.RESET)
 
@@ -136,7 +136,7 @@ def menuactualizar(id):
             break
 
         personaactualizado = {**activoexistente[0], **personas}
-        peticion = requests.put(f'http://154.38.171.54:5503/personas/{id}', data=json.dumps(personaactualizado, indent=4))
+        peticion = requests.put(f'http://154.38.171.54:5501/personas/{id}', data=json.dumps(personaactualizado, indent=4))
         res = peticion.json()
 
         if peticion.status_code == 200:

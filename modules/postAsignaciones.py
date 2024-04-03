@@ -12,12 +12,12 @@ class colors:
     BOLDYELLOW = '\033[1;33m'
 
 def getDataAsignaciones():
-    peticionAsignaciones = requests.get("http://154.38.171.54:5503")
+    peticionAsignaciones = requests.get("http://154.38.171.54:5501")
     dataAsignaciones = peticionAsignaciones.json()
     return dataAsignaciones
 
 def obtenerAsignaId(id):
-    peticionAsigna = requests.get(f"http://154.38.171.54:5503/activos/{id}")
+    peticionAsigna = requests.get(f"http://154.38.171.54:5501/activos/{id}")
     dataAsignaId= peticionAsigna.json()
     return dataAsignaId
 
@@ -127,7 +127,7 @@ def postAsignacionesPersona(idactivo):
 
 
 
-            link =  f"http://154.38.171.54:5503/activos/{idactivo}"
+            link =  f"http://154.38.171.54:5501/activos/{idactivo}"
             respuesta = requests.put(link, json=activo)
             if respuesta.status_code == 200:
                 activo["idEstado"]="1"
@@ -220,7 +220,7 @@ def postAsignacionesZonas(idactivo):
 
 
 
-            link =  f"http://154.38.171.54:5503/activos/{idactivo}"
+            link =  f"http://154.38.171.54:5501/activos/{idactivo}"
             respuesta = requests.put(link, json=activo)
             if respuesta.status_code == 200:
                 activo["idEstado"]="1"
@@ -273,7 +273,7 @@ def menuAsignacionActivos():
             break    
 
 
-def getAllAsignaId():
+def getAllAsignaId(id):
 
 
     asignacionid = []

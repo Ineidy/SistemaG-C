@@ -12,7 +12,7 @@ class colors:
     BOLDYELLOW = '\033[1;33m'
 
 def getDataZonas():
-    peticion = requests.get("http://154.38.171.54:5502/zonas")
+    peticion = requests.get("http://154.38.171.54:5503/zonas")
     data = peticion.json()
     return data
 
@@ -58,7 +58,7 @@ def postZonas():
             print(error)
 
 
-        posicion = requests.post("http://154.38.171.54:5502/zonas", data=json.dumps(zonas, indent=4))
+        posicion = requests.post("http://154.38.171.54:5503/zonas", data=json.dumps(zonas, indent=4))
         res =posicion.json()
         tablazona = [zonas]
         return print(tabulate(tablazona, headers="keys", tablefmt='rounded_grid'))
@@ -97,7 +97,7 @@ def updatezonas(id):
             return {"Mensaje": "Zona no encontrada"}
         
         zonaactualizada = {**zonaexistente[0], **zonas}
-        peticion = requests.put(f'http://154.38.171.54:5502/zonas/{id}', data=json.dumps(zonaactualizada, indent=4))
+        peticion = requests.put(f'http://154.38.171.54:5503/zonas/{id}', data=json.dumps(zonaactualizada, indent=4))
         res = peticion.json()
 
         if peticion.status_code == 200:
@@ -134,7 +134,7 @@ def deleteZonas(id):
             print("No Existe Una Persona Con Este Id :C ")
             return 
     
-        peticion = requests.delete(f"http://154.38.171.54:5502/zonas/{id}")
+        peticion = requests.delete(f"http://154.38.171.54:5503/zonas/{id}")
         if peticion.status_code == 200:
             print(colors.BOLDYELLOW+"Zona Eliminada") 
             return True
